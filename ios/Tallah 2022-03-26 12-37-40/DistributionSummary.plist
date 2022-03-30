@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Tallah.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>buildNumber</key>
+			<string>4</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>79C9A05DA9A6331ED85694699FAC65497E6427BD</string>
+				<key>dateExpires</key>
+				<string>21/03/2023</string>
+				<key>type</key>
+				<string>Apple Development</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>79C9A05DA9A6331ED85694699FAC65497E6427BD</string>
+						<key>dateExpires</key>
+						<string>21/03/2023</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>OpenSSL.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>XTVS6AC6R6</string>
+						<key>name</key>
+						<string>Dahlia Metwally</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.1.180</string>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>XTVS6AC6R6.co.tallah.app</string>
+				<key>aps-environment</key>
+				<string>development</string>
+				<key>com.apple.developer.applesignin</key>
+				<array>
+					<string>Default</string>
+				</array>
+				<key>com.apple.developer.team-identifier</key>
+				<string>XTVS6AC6R6</string>
+				<key>get-task-allow</key>
+				<true/>
+			</dict>
+			<key>name</key>
+			<string>Tallah.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>f13e4b40-7034-48aa-9ec8-a6cab02b9ea0</string>
+				<key>dateExpires</key>
+				<string>22/03/2023</string>
+				<key>name</key>
+				<string>iOS Team Provisioning Profile: co.tallah.app</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>XTVS6AC6R6</string>
+				<key>name</key>
+				<string>Dahlia Metwally</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>1.0</string>
+		</dict>
+	</array>
+</dict>
+</plist>
