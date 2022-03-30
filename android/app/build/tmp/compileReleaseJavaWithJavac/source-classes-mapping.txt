@@ -1,0 +1,9 @@
+co/tallah/app/BuildConfig.java
+ co.tallah.app.BuildConfig
+co/tallah/app/MainActivity.java
+ co.tallah.app.MainActivity
+co/tallah/app/MainApplication.java
+ co.tallah.app.MainApplication
+ co.tallah.app.MainApplication$1
+com/facebook/react/PackageList.java
+ com.facebook.react.PackageList

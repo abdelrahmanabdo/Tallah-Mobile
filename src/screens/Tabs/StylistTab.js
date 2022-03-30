@@ -12,10 +12,6 @@ import style from '../../assets/styles/StylistTabStyle';
 import FastImage from 'react-native-fast-image';
 import Button from '../../components/Button';
 
-//Apis
-import api from '../../config/api';
-import endpoints from '../../config/endpoints';
-import NotFound from '../../components/NotFound';
 import StylistsList from '../Stylist/StylistsList';
 
 const width = Dimensions.get('window').width ;
@@ -102,11 +98,12 @@ const StylistTab = props => {
                 your character.
               </Text>
           </View>
-          <Button label ={'Next'}
-                  labelColor = {'#FFF'}
-                  onPress={()=> setIsFirstTime(false) }
-                  style={{width : '90%',padding :15,marginBottom : 30}}
-                  />
+          <Button   
+            label ={'Next'}
+            labelColor = {'#FFF'}
+            onPress={()=> setIsFirstTime(false) }
+            style={{width : '90%',padding :15,marginBottom : 30}}
+          />
       </View>
   }
 
@@ -124,12 +121,12 @@ const StylistTab = props => {
           <View style={{flexDirection : 'row', flex: 1, justifyContent: 'flex-end'}}>
           {
             user.isLoggedIn && <>
-              <BorderlessButton onPress={() => {navigation.navigate('notifications')}}>
+              <BorderlessButton onPress={() => props.navigation.navigate('notifications')}>
                 <FastImage source={require('../../assets/icons/notification.png')}  
                           resizeMode={'contain'}
                           style={{width : 25,height : 25}} />
                 </BorderlessButton>
-                <BorderlessButton onPress={() => {navigation.navigate('profile')}}>
+                <BorderlessButton onPress={() => props.navigation.navigate('profile')}>
                   <FastImage 
                     source={
                       user.account?.profile?.avatar 
