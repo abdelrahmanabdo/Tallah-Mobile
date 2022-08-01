@@ -19,7 +19,7 @@ export default  style = StyleSheet.create({
       justifyContent:'space-between'
    },
    orImage : {
-      height : 20,
+      height : 30,
       marginVertical : 10
    },
    socialImage : {

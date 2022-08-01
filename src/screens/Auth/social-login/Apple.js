@@ -18,7 +18,6 @@ import FastImage from 'react-native-fast-image';
 const Apple = ({ onSuccess, onFailure }) => {
 
   const signIn = async () => {
-    console.log('fasfasf');
     // performs login request
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: appleAuth.Operation.LOGIN,

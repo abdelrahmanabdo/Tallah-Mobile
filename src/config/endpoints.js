@@ -64,5 +64,6 @@ export default {
   //Settings
   'getUserSettings': 'user-settings',
   'upsertUserSettings': 'user-settings/upsert-settings',
-  
+
+  'deleteUserAccount': 'user-settings/delete/account',
 };

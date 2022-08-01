@@ -1,5 +1,5 @@
 import React , {useState , useEffect} from 'react';
-import { Text, View, ImageBackground , FlatList , TextInput, SafeAreaView ,TouchableNativeFeedback, KeyboardAvoidingView, I18nManager, Pressable } from 'react-native';
+import { Text, View, ImageBackground, TextInput, SafeAreaView, KeyboardAvoidingView, I18nManager, Pressable, Platform } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { BorderlessButton, RectButton, ScrollView   } from 'react-native-gesture-handler';
 import EmojiPicker from 'react-native-emoji-picker-staltz';
@@ -25,10 +25,10 @@ const BlogItemView = props  => {
    const [isSubmitting, setIsSubmitting] = useState(false);
    const [showEmojis , setShowEmojis] = useState(false);
    const [comment , setComment ] = useState('');
- 
+
    /**
-   * Get current blog data
-   */
+    * Get current blog data
+    */
    const getBlogData = () => {
       if (!props.route?.params?.blogId) return;
 
@@ -79,9 +79,9 @@ const BlogItemView = props  => {
 
 
    /**
-    * Create New Blog handler
+    * submit New Blog comment handler
     */
-   const submitComment = () => {    
+   const submitComment = () => {
       if (!user.isLoggedIn) return new Snackbar({text : I18n.t('pleaseLoginFirst') }); 
       setIsSubmitting(true);
 
@@ -104,42 +104,43 @@ const BlogItemView = props  => {
    };
 
    useEffect(() => {
-      //Get current blog data
       getBlogData();
    }, []);
 
-   return  <SafeAreaView style={[GeneralStyle.container]}>
-        <SafeAreaView style={{
-            display: 'flex', 
-            flexDirection: 'row',
-            marginStart: 15,
-            marginBottom: 20
-          }}
+          
+   return <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        style={[GeneralStyle.container]}
+      >
+      <SafeAreaView style={{
+          display: 'flex', 
+          flexDirection: 'row',
+          marginStart: 15,
+          marginBottom: 20
+        }}
+      >
+        <RectButton 
+          style={{ padding: 5, borderRadius: 5}} 
+          onPress={()=>{props.navigation.goBack()}}
         >
-          <RectButton 
-            style={{ padding: 5, borderRadius: 5}} 
-            onPress={()=>{props.navigation.goBack()}}
-          >
-            <FastImage 
-              source={require('../../assets/icons/back-arrow.png')} 
-              style = {
-                {
-                  width: 23,
-                  height: 23,
-                  transform: [{
-                    rotate: I18nManager.isRTL ? '180deg' : '0deg'
-                  }]
-                }
-              }
-              resizeMode="contain"
-            />
-          </RectButton>
-          <Text style={[GeneralStyle.headerText, { marginStart : 15}]}>
-            Chic Chat
-          </Text>
-        </SafeAreaView>
-        {
-        isLoading 
+          <FastImage 
+            source={require('../../assets/icons/back-arrow.png')} 
+            style = {{
+              width: 23,
+              height: 23,
+              transform: [{
+                rotate: I18nManager.isRTL ? '180deg' : '0deg'
+              }]
+            }}
+            resizeMode="contain"
+          />
+        </RectButton>
+        <Text style={[GeneralStyle.headerText, { marginStart : 15}]}>
+          Chic Chat
+        </Text>
+      </SafeAreaView>
+      {
+      isLoading 
         ? <Spinner />
         : <>
           <View style={[style.container]}>
@@ -191,7 +192,11 @@ const BlogItemView = props  => {
                   }
                   </View>
                   <Text style={[style.blogText]}>
-                  {blog?.body.replace(/<\/?[^>]+(>|$)/g, "")}
+                  {
+                    blog?.body
+                      .replace(/(&nbsp;|&quot;|(<([^>]+)>))/ig, "")
+                      .replace(/&rsquo;/ig, "'")
+                  }
                   </Text>
               </ImageBackground>
             }
@@ -201,9 +206,9 @@ const BlogItemView = props  => {
               </Text>
               {
                 blog.comments?.length > 0 ?
-                 blog.comments.map((item, index) => (
-                   <CommentItem item={item} key={index} />
-                 ))
+                  blog.comments.map((item, index) => (
+                    <CommentItem item={item} key={index} />
+                  ))
                 :
                 <Text>
                   No comments till now
@@ -212,30 +217,32 @@ const BlogItemView = props  => {
             </View>
           </ScrollView>
         </View>
-        <KeyboardAvoidingView style={[style.newCommentContainer]}>
-            <TextInput value={comment}
-                      onChangeText={(value) => setComment(value)}
-                      style={{padding: 10 , flex: 4 , color : '#012647'}}
-                      placeholder={'Write Your comment here'}
-                      placeholderTextColor={'#CCC'}
-            />
-            <View style={{flex:1,flexDirection:'row'}}>
-              <BorderlessButton onPress={()=>setShowEmojis(true)}>
-                <FastImage source={require('../../assets/icons/emoji.png')} 
-                            style={{width : 25 , height : 25 ,marginEnd:10}} />
-              </BorderlessButton>
-              <Pressable
-                onPress={submitComment}
-                disabled={!comment || isSubmitting}
-              >
-                <FastImage 
-                  source={require('../../assets/icons/submit-comment.png')} 
-                  style={{width : 23 , height : 23}} 
-                  resizeMode="contain"
-                />
-              </Pressable>
-            </View>
-        </KeyboardAvoidingView>
+        <View style={[style.newCommentContainer]}>
+          <TextInput 
+            value={comment}
+            onChangeText={(value) => setComment(value)}
+            style={{padding: 10 , flex: 4 , color : '#012647'}}
+            placeholder={'Write Your comment here'}
+            placeholderTextColor={'#CCC'}
+            returnKeyType={'done'}
+          />
+          <View style={{flex:1,flexDirection:'row'}}>
+            <BorderlessButton onPress={()=>setShowEmojis(true)}>
+              <FastImage source={require('../../assets/icons/emoji.png')} 
+                          style={{width : 25 , height : 25 ,marginEnd:10}} />
+            </BorderlessButton>
+            <Pressable
+              onPress={submitComment}
+              disabled={!comment || isSubmitting}
+            >
+              <FastImage 
+                source={require('../../assets/icons/submit-comment.png')} 
+                style={{width : 23 , height : 23}} 
+                resizeMode="contain"
+              />
+            </Pressable>
+          </View>
+        </View>
         <Modal visible={showEmojis} 
               avoidKeyboard={true}
               animationInTiming={150}
@@ -266,8 +273,8 @@ const BlogItemView = props  => {
             />
         </Modal>
       </>
-      }
-    </SafeAreaView>
+    }
+   </KeyboardAvoidingView>
 }
  
 export default BlogItemView;

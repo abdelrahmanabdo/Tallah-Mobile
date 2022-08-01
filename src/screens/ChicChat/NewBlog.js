@@ -2,9 +2,8 @@ import React, {
   useState,
   useEffect
 } from 'react';
-import { Text, View, ImageBackground , FlatList , ScrollView, SafeAreaView, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { Text, View, ImageBackground , FlatList , ScrollView, SafeAreaView, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { createReadStream } from 'react-native-fs';
 import { BorderlessButton , BaseButton } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import Modal from 'react-native-modal';
@@ -21,7 +20,6 @@ import Button from '../../components/Button';
 import Snackbar from '../../components/Snackbar';
 
 //Apis
-import api from '../../config/api';
 import endpoints from '../../config/endpoints';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -78,7 +76,7 @@ const NewBlog = props  => {
       storageOptions: {
         skipBackup: true,
         path: 'images',
-        includeBase64: true,
+        includeExtra: true,
       },
     };
     ImagePicker.launchImageLibrary(options, (response) => {
@@ -248,14 +246,15 @@ const NewBlog = props  => {
               />
             }        
             </View>
-            <KeyboardAvoidingView>
-              <Input name={'Title'}
-                    placeholderText={I18n.t('title')}  
-                    onChangeText={value => setTitle(value)}
-                    defaultValue={title}
-                    placeholderColor={'#C3C3C3'}  
-                    title={title}
-                    color={'#000000'}  
+            <View>
+              <Input
+                name={'Title'}
+                placeholderText={I18n.t('title')}  
+                onChangeText={value => setTitle(value)}
+                defaultValue={title}
+                placeholderColor={'#C3C3C3'}  
+                title={title}
+                color={'#000000'}  
               />
               <View style={{
                   flexDirection: 'row',
@@ -294,9 +293,9 @@ const NewBlog = props  => {
                     placeholderColor={'#C3C3C3'} 
                     color={'#000000'}  
               />
-            </KeyboardAvoidingView>
+            </View>
         </ScrollView>
-        <SafeAreaView style={[style.actionsContainer]}>
+        <View style={[style.actionsContainer]}>
             <View style={{flexDirection : 'row'}}>
               <BorderlessButton onPress={launchCamera}>
                   <FastImage  source={require('../../assets/icons/camera.png')}
@@ -314,7 +313,7 @@ const NewBlog = props  => {
                           resizeMode={'contain'}
                           style={{width : 30 , height : 30 , marginEnd : 15}} />
             </BorderlessButton>
-        </SafeAreaView>
+        </View>
         <SubmitModal />
     </SafeAreaView>
 }

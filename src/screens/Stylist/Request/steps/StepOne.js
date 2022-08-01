@@ -49,6 +49,7 @@ const StepOne = props => {
       let options = {
         storageOptions: {
           skipBackup: true,
+          includeExtra: true,
         },
       };
       ImagePicker.launchImageLibrary(options, (response) => {

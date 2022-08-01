@@ -1,24 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, ImageBackground, SafeAreaView , Switch, I18nManager } from 'react-native';
+import { Text, View, SafeAreaView , Switch, I18nManager } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import AsyncStorage from '@react-native-community/async-storage';
 import { BorderlessButton, RectButton, ScrollView } from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import Modal from 'react-native-modal';
 
 //Styles
 import style from '../assets/styles/SettingsStyle';
 import GeneralStyle from '../assets/styles/GeneralStyle';
+import ModalStyle from '../assets/styles/ModalStyle';
 
+import Snackbar from '../components/Snackbar';
+import TallaButton from '../components/Button';
 
 //Apis
 import api from '../config/api';
 import endpoints from '../config/endpoints';
-import Snackbar from '../components/Snackbar';
 
 import I18n from '../lang/I18n';
 
+import { logoutUser } from '../redux/actions/user';
+import { resetStylistData } from '../redux/actions/stylist';
+import { unassignUserToken } from '../helpers/Auth';
 
 const Settings = props  => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const user = useSelector(state => state.user);
   const [data , setData] = useState({
     show_working_hours: true,
@@ -26,6 +37,7 @@ const Settings = props  => {
     send_reservations: true,
     send_before_reservations: true,
   });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
    const getUserSettings = () => {
      api.get(endpoints.getUserSettings + '?user_id=' + user.account.id)
@@ -41,6 +53,72 @@ const Settings = props  => {
          }
        });
    };
+
+  /**
+    * Delete account modal
+    */
+  const DeleteAccountModal = () => {
+
+   const deleteUserAccount = () => {
+    console.log('aaaaa');
+     api.post(endpoints.deleteUserAccount, { user_id: user.account.id })
+       .then(async (res) => {
+        console.log({res});
+         if (res.data.status) {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Home' }],
+            });
+            unassignUserToken(user?.account?.id);
+            let keys = await AsyncStorage.getAllKeys();
+            keys = keys.filter((key) => !['deviceToken', 'isFirstTime'].includes(key));
+            await AsyncStorage.multiRemove(keys);
+            dispatch(logoutUser());
+            dispatch(resetStylistData());
+         } else {
+          console.log({ err });
+         }
+       })
+       .catch((err) => {
+          console.log({ err: err.response });
+       });
+   };
+
+    return <Modal 
+              isVisible={showDeleteModal}
+              animationIn={'bounceIn'}
+              backdropOpacity={.7}
+          >
+      <View style={ModalStyle.container}>                
+        <FastImage 
+          source={require('../assets/icons/delete-red.png')}
+          resizeMode="contain"
+          style={{width :  60  , height:  60 }}
+        />
+        <Text style={[ModalStyle.text,{fontFamily : 'Roboto-Bold'}]}>
+            Are you sure that you want to delete your account?
+        </Text>
+        <View style={{flexDirection:"row"}}>
+          <TallaButton   
+            onPress={() => setShowDeleteModal(false) }
+            label={'Cancel'}
+            isModal
+            labelColor={'#686868'}
+            style={[ModalStyle.SecondaryButton,{
+              backgroundColor:'#FFF',  marginEnd: 10, flex: 1,
+              borderColor: '#CCC', borderWidth: 1}]}
+          />
+          <TallaButton  
+            onPress={deleteUserAccount}
+            label={'Delete'}
+            isModal
+            labelColor={'#FFF'}
+            style={[ModalStyle.SecondaryButton, {backgroundColor: '#FF0000', flex: 1}]}
+          />
+        </View>
+      </View>
+    </Modal>
+  }
 
    const upsertUserSettings = (data) => {
      const updatedData = { 
@@ -83,12 +161,12 @@ const Settings = props  => {
         <View style={{flexDirection : 'row'}}>
           {
             user.isLoggedIn && 
-            <BorderlessButton onPress={() => {props.navigation.navigate('notifications')}}>
-              <FastImage source={require('../assets/icons/notification.png')}
-                      resizeMode={'contain'}
-                      style={{width : 25,height : 25}} />
-            </BorderlessButton>
-        }
+              <BorderlessButton onPress={() => {props.navigation.navigate('notifications')}}>
+                <FastImage source={require('../assets/icons/notification.png')}
+                        resizeMode={'contain'}
+                        style={{width : 25,height : 25}} />
+              </BorderlessButton>
+          }
         </View>
       </View>
     </View>
@@ -128,6 +206,7 @@ const Settings = props  => {
           }}
         />
       </Animatable.View>
+
       <View style={style.itemContainer}>
         <Text style={style.headerText}>
             Notifications
@@ -163,8 +242,31 @@ const Settings = props  => {
           }}
         />
       </Animatable.View>
+
+      <View style={[style.itemContainer, { marginTop: 30}]}>
+        <Text style={style.headerText}>
+            Account
+        </Text>
+      </View>
+      <Animatable.View animation={'slideInUp'} style={style.itemContainer}>
+        <Text style={style.title}>
+          Delete your account
+        </Text>
+        <RectButton
+          value={data.send_before_reservations ? true : false}
+          style={style.deleteButton}
+          onPress={() => setShowDeleteModal(true)}
+        >
+          <Text style={style.deleteButtonText}>
+            Delete
+          </Text>
+        </RectButton>
+      </Animatable.View>
+
+      <DeleteAccountModal />
+
     </ScrollView>
-    </SafeAreaView>
+  </SafeAreaView>
 }
  
 export default Settings;

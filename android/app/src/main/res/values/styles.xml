@@ -7,8 +7,8 @@
     </style>
     <style name="SplashTheme" parent="SplashScreen_SplashTheme">
         <item name="android:windowBackground">@drawable/launch_screen</item>
-        <!-- <item name="android:windowActionBar">True</item> -->
-        <item name="android:statusBarColor">#FFF</item>
+        <item name="android:windowActionBar">True</item>
+        <item name="android:statusBarColor">#F2F2F2</item>
         <item name="android:windowLightStatusBar">false</item> 
         <item name="android:textColor">#D4AF37</item>
         <item name="android:textColorAlertDialogListItem">#D4AF37</item>

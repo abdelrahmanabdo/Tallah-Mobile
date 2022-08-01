@@ -135,9 +135,9 @@ const ClosetItemView = ({...props}) => {
         getColors();
       }, []);
 
-      return <Modal  isVisible={showEditModal}
-                        style={{ margin: 0, justifyContent:'flex-end'}}
-                        backdropOpacity={.7}>
+      return <Modal isVisible={showEditModal}
+                    style={{ margin: 0, justifyContent:'flex-end'}}
+                    backdropOpacity={.7}>
             <ScrollView style={ModalStyle.actionModalContainer}
                         showsVerticalScrollIndicator={false}>
                <View style={ModalStyle.actionModalHeader}>
@@ -272,9 +272,6 @@ const ClosetItemView = ({...props}) => {
     */
    const DeleteModal = () => {
 
-      /**
-       * Get brands
-      */
       const deleteItem = () => {
          api  
             .delete(`${endpoints.closet}/${data.id}`)

@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Text, View ,ScrollView, SafeAreaView, I18nManager} from 'react-native';
+import {
+  Text,
+  View,
+  ScrollView,
+  SafeAreaView,
+  I18nManager,
+} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FastImage from 'react-native-fast-image';
 import { RectButton  } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
@@ -9,6 +16,7 @@ import GeneralStyle from '../assets/styles/GeneralStyle';
 import ModalStyle from '../assets/styles/ModalStyle';
 import TallahButton from '../components/Button';
 import Input from '../components/Input';
+import Phone from '../components/Phone';
 import Snackbar from '../components/Snackbar';
 
 //Apis
@@ -74,8 +82,8 @@ const Support = props  => {
     </Modal>
   };
 
-  return  <SafeAreaView style={[GeneralStyle.container]}>
-      <View style={GeneralStyle.header}>
+  return <View style={[GeneralStyle.container]}>
+      <SafeAreaView style={GeneralStyle.header}>
         <View style={[GeneralStyle.rowSpaceBetween,{width : '90%'}]}>
             <RectButton onPress={()=>{props.navigation.goBack()}}>
                 <FastImage 
@@ -97,13 +105,11 @@ const Support = props  => {
             </Text>
             <View></View>
           </View>
-      </View>
-      <ScrollView>
-          <Text
-              style={[GeneralStyle.grayText , {padding : 25}]}
-          >
-              Lorem Ipsum has been the industry's Lorem Ipsum has 
-              been the industry's Lorem Ipsum has been the industry's
+      </SafeAreaView>
+      <KeyboardAwareScrollView>
+          <Text style={[GeneralStyle.grayText , {padding : 25}]}>
+            Tallah is waiting your feedback & suggestions, 
+            listening to our Tallah users is a priority, thank you.
           </Text>
           <Input name={'Name'} 
                   placeholderText={'Your Name'}  
@@ -112,8 +118,9 @@ const Support = props  => {
                   defaultValue={data.name}
                   color={'#000'}
           />
-          <Input name={'Mobile'} 
-                placeholderText={'Your Mobile number'}  
+          <Phone name={'Mobile'} 
+                placeholderText={'Your Mobile number'}
+                
                 onChangeText={value => setData({...data , mobile : value})}
                 placeholderColor={'#ccc'} 
                 defaultValue={data.mobile}
@@ -127,7 +134,7 @@ const Support = props  => {
                 defaultValue={data.message}
                 color={'#000'}
           />
-      </ScrollView>
+      </KeyboardAwareScrollView>
       <SafeAreaView>
           <TallahButton 
               onPress={sendSupportMessage}
@@ -138,7 +145,7 @@ const Support = props  => {
           />
       </SafeAreaView>
       <SubmitModal />
-  </SafeAreaView>
+    </View>
 }
  
 export default Support;

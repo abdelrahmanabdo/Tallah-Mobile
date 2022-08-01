@@ -145,4 +145,6 @@ export default {
    makeQuotation: 'Make Quotation',
    startSession: 'Start Session',
 
+   unAuthorized: "خطأ في البريد الإلكتروني او كلمة المرور!",
+
 };

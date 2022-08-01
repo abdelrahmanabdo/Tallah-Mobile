@@ -94,7 +94,11 @@ const BlogBox = props => {
             resizeMode={'stretch'}
           />
           <Text style={[style.blogText]} numberOfLines={3}>
-            {blog.body}
+            {
+              blog.body
+                .replace(/(&nbsp;|&quot;|(<([^>]+)>))/ig, "")
+                .replace(/&rsquo;/ig, "'")
+            }
           </Text>
         </RectButton>
     </View>

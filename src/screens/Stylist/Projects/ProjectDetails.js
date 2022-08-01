@@ -43,9 +43,6 @@ const ProjectDetails = props => {
   */
   const DeleteModal = () => {
 
-    /**
-     * Get brands
-    */
     const deleteItem = () => {
         api.delete(`${endpoints.stylistProject}/${props.route.params.projectId}`)
             .then(res => {

@@ -18,6 +18,7 @@ import I18n from '../../lang/I18n';
 import api from '../../config/api';
 import endpoints from '../../config/endpoints';
 import AsyncStorage from '@react-native-community/async-storage';
+import Snackbar from '../../components/Snackbar';
 
 const { width } = Dimensions.get('window');
 
@@ -39,7 +40,11 @@ const Chat = ({ route, navigation }) => {
 
   const toData = route.params.stylist
       || (chat?.user?.id === user.account.id ? null : chat.user) 
-      || chat.stylist.user; 
+      || (chat.stylist && chat.stylist.user)
+      || (new Snackbar({
+          text: 'This stylist data is not available now!',
+          type: 'danger'
+        }) && navigation.goBack()); 
 
   const getChatMessages = async () => {
     const apiParams = route.params.chatId
@@ -66,7 +71,8 @@ const Chat = ({ route, navigation }) => {
     let options = {
       storageOptions: {
         skipBackup: true,
-        saveToPhotos: true
+        saveToPhotos: true,
+        includeExtra: true,
       },
     };
 
@@ -93,7 +99,7 @@ const Chat = ({ route, navigation }) => {
       storageOptions: {
         skipBackup: true,
         path: 'images',
-        includeBase64: true,
+        includeExtra: true,
       },
     };
     ImagePicker.launchImageLibrary(options, async (response) => {

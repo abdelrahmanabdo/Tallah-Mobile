@@ -42,13 +42,12 @@ const Onboarding = ({...props}) => {
   // When user clicks skip button
   const skipClickHandler = () => {
     dispatch(changeFirstTimeStatus());
-    props.navigation.navigate('registration');
+    props.navigation.navigate('Auth');
     setActiveScreen(0);
   };
 
   // When user clicks next button
   const nextClickHandler = () => {
-    console.log(activeScreen)
     if ([0,1].includes(activeScreen))
       setActiveScreen(activeScreen + 1);
     else

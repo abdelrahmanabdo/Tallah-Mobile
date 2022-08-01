@@ -96,7 +96,7 @@ export default StyleSheet.create({
       alignItems:'center',
       backgroundColor: '#FFF',
       paddingHorizontal  : 10,
-      paddingVertical : 8,
+      paddingVertical : 15,
       borderTopWidth : 1 ,
       borderTopColor : '#CCC',
    }

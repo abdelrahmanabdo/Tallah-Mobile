@@ -61,7 +61,7 @@ const Intro = props  => {
           <Button label={'Start Sharing'}
                   labelColor = {'#FFF'}
                   style={{width : '93%'}}
-                  onPress={()=>{props.navigation.navigate('newBlog')}}
+                  onPress={()=>{props.navigation.push('newBlog')}}
           />
       </View>
     </SafeAreaView>

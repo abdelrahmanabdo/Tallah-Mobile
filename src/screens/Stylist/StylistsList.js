@@ -80,8 +80,9 @@ const StylistsList = props => {
    * Render featured stylists list
    */
   const renderStylist = ({item}) => {
-     return <RectButton onPress={()=> {navigation.navigate('stylistDetails', {stylistId: item.id})}}
-                        style={[style.stylistBox]}>
+     return <RectButton onPress={() => navigation.navigate('stylistProfile', {stylistId: item.id})}
+                        style={[style.stylistBox]}
+            >
          <View style={{flex: .75}}>
           <FastImage 
             source={item.avatar ? {uri: item.avatar} : require('../../assets/icons/default-avatar.png')} 
@@ -132,7 +133,7 @@ const StylistsList = props => {
             (!stylist.profile) && 
             <BorderlessButton 
               style={[GeneralStyle.SecondaryButton]}
-              onPress={() => navigation.navigate(user.isLoggedIn ? 'stylistRequestIntro' : 'login')}
+              onPress={() => navigation.navigate(user.isLoggedIn ? 'stylistRequestIntro' : 'Auth')}
             >
               <Text style={[GeneralStyle.SecondaryButtonText]}>
                 Be a Stylist

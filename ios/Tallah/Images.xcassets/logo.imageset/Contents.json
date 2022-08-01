@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "white-bg-logo.png",
+      "filename" : "logo with frame white background-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "white-bg-logo@2x.png",
+      "filename" : "logo with frame white background-01@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "white-bg-logo@3x.png",
+      "filename" : "logo with frame white background-01@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

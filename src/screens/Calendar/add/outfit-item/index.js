@@ -47,19 +47,6 @@ const OutfitItemSelector = ({ route, navigation })  => {
   };
 
   /**
-   * Get user closet
-   * @param 
-   * @returns blogs
-   */
-  const getUserCloset = (season = 1, categoryId = null, colorId = null, brandId = null) => {
-    setIsLoading(true);
-    api.get(`${endpoints.closet}?user_id=${user.account?.id}&category_id=${
-      categoryId}&season=${season}&color=${colorId}&brand=${brandId}`)
-          .then(res => setClosetItems(res.data.data), setIsLoading(false))
-          .catch(err => setIsLoading(false));
-  };
-
-  /**
   * Get categories
   */
   const getCategories = () => {
@@ -124,7 +111,7 @@ const OutfitItemSelector = ({ route, navigation })  => {
             /> 
           :
           
-          item.items.map((closetItem, key) => (
+          item.items?.map((closetItem, key) => (
             <FastImage 
               key={key}
               source={ closetItem.closet_item.image 
@@ -178,7 +165,7 @@ const OutfitItemSelector = ({ route, navigation })  => {
           <RectButton 
             onPress={() => {
               setActiveTab(1);
-              getUserCloset(1);
+              getUserClosetOutfit(1);
             }}
             style = {
               [GeneralStyle.tabButton, {
@@ -193,7 +180,7 @@ const OutfitItemSelector = ({ route, navigation })  => {
           <RectButton 
             onPress={() => { 
               setActiveTab(2);
-              getUserCloset(2);
+              getUserClosetOutfit(2);
             }}
             style = {
               [GeneralStyle.tabButton, {

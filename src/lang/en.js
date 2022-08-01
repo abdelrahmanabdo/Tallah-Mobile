@@ -150,5 +150,5 @@ export default {
    makeQuotation: 'Make Quotation',
    startSession: 'Start Session',
 
-
+   unAuthorized: "Wrong Email Or Password",
 };

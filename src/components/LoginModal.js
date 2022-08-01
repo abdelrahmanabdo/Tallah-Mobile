@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, View , StyleSheet, Dimensions} from 'react-native';
+import { Text, View , StyleSheet, Platform, KeyboardAvoidingView} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { RectButton, BorderlessButton, BaseButton } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import TallaButton from '../components/Button';
 import { Button } from 'react-native-share';
@@ -26,11 +25,12 @@ import endpoints from '../config/endpoints';
 import { TouchableRipple } from 'react-native-paper';
 
 const LoginModal = props => {
-    const navigation = useNavigation();
-    const dispatch = useDispatch();
-    const [ data, setData ] = useState({password: "" , email: ""});
-    const [ errors, setErrors ] = useState({});
-    const [ isDoingSomething , setIsDoingSomething ] = useState(false);
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const [ data, setData ] = useState({password: "" , email: ""});
+  const [ errors, setErrors ] = useState({});
+  const [ isDoingSomething , setIsDoingSomething ] = useState(false);
+  const keyboardVerticalOffset = Platform.OS === 'ios' ? 64 : 0;
 
     /**
         * Validator
@@ -82,87 +82,85 @@ const LoginModal = props => {
    //Navigate to Regstration screen
    const navigateToRegisteration = () => {
       props.onClose();
-      navigation.push('registration');
-   }
+      navigation.navigate('Auth');
+   };
 
    return  <Modal 
               isVisible={props.showModal} 
               style={[style.container]} 
               animationOut={'bounceOut'}
               animationIn={'bounceIn'}
-              animationInTiming={1}
+              animationInTiming={1.3}
               animationOutTiming={1}
               backdropOpacity={.4}
             >
-      <View style={[ModalStyle.actionModalContainer ,
-                    {justifyContent:'space-between'}]}
-                  showsVerticalScrollIndicator={false}>
-            <View style={ModalStyle.actionModalHeader}>
-               <View style={{flex:1}}></View>
-               <Text style={[ModalStyle.headerText,{flex:1}]}>
-                Login First
-               </Text>
-               <Button 
-                  transparent  
-                  onPress={props.onClose}>
-                  <FastImage  source={require('../assets/icons/close-colored.png')}
-                              style={{width: 22, height: 22, flex:1}}
-                              resizeMode={'contain'} />
-               </Button>
-            </View>
-            <View>
-                <Input 
-                    style={{ borderColor: errors.email ? 'red' : '#ccc' }}
-                    name={I18n.t('email')} 
-                    placeholderText={I18n.t('email')}                  
-                    onChangeText={value => setData({...data, email: value})}
-                    color={'#DCB77C'}
-                    placeholderColor={'#DCB77C'} />
-                <Input 
-                    style={{ borderColor: errors.password ? 'red' : '#ccc' }}
-                    name={I18n.t('password')}
-                    onChangeText={value => setData({...data, password: value})}
-                    placeholderText={I18n.t('password')}
-                    password={true}
-                    color={'#DCB77C'}
-                    placeholderColor={'#DCB77C'} />
-            </View>
-            <View style={LoginStyle.rowContainer}>
-                  <Text style={[LoginStyle.primarySmallText, {marginEnd: 8}]}>
-                     {I18n.t('donotHaveAnAccount')}
+      <KeyboardAvoidingView 
+        style={[ModalStyle.actionModalContainer]}
+        behavior={Platform.OS === "ios" ? "padding" : null}
+      >
+        <View style={ModalStyle.actionModalHeader}>
+            <View style={{flex:1}} />
+            <Text style={[ModalStyle.headerText,{flex:1}]}>
+              Login First
+            </Text>
+            <Button transparent onPress={props.onClose}>
+              <FastImage  source={require('../assets/icons/close-colored.png')}
+                          style={{width: 22, height: 22, flex:1}}
+                          resizeMode={'contain'} />
+            </Button>
+        </View>
+        <View>
+            <Input 
+                style={{ borderColor: errors.email ? 'red' : '#ccc' }}
+                name={I18n.t('email')} 
+                placeholderText={I18n.t('email')}                  
+                onChangeText={value => setData({...data, email: value})}
+                color={'#DCB77C'}
+                placeholderColor={'#DCB77C'} />
+            <Input 
+                style={{ borderColor: errors.password ? 'red' : '#ccc' }}
+                name={I18n.t('password')}
+                onChangeText={value => setData({...data, password: value})}
+                placeholderText={I18n.t('password')}
+                password={true}
+                color={'#DCB77C'}
+                placeholderColor={'#DCB77C'} />
+        </View>
+        <View style={LoginStyle.rowContainer}>
+              <Text style={[LoginStyle.primarySmallText, {marginEnd: 8}]}>
+                  {I18n.t('donotHaveAnAccount')}
+              </Text>
+              <TouchableRipple 
+                  rippleColor={'#D6D6D6'}
+                  style={{paddingVertical: 4, paddingHorizontal: 2, borderRadius: 5}}
+                  onPress={navigateToRegisteration}
+              >
+                  <Text style={[LoginStyle.primaryMediumText]}>
+                    {I18n.t('signUp')}
                   </Text>
-                  <TouchableRipple 
-                     rippleColor={'#D6D6D6'}
-                     style={{paddingVertical: 4, paddingHorizontal: 2, borderRadius: 5}}
-                     onPress={navigateToRegisteration}
-                  >
-                     <Text style={[LoginStyle.primaryMediumText]}>
-                        {I18n.t('signUp')}
-                     </Text>
-                  </TouchableRipple>
-            </View>
-            <View style={{flexDirection:'row',marginBottom : 10}}>
-                  <TallaButton   
-                        onPress={props.onClose}
-                        label ={'cancel'}
-                        labelColor={'#D4AF37'}
-                        isModal
-                        style={[ModalStyle.SecondaryButton,
-                                {backgroundColor:'#FFF', marginEnd : 10, flex:1,
-                                 borderColor  : '#D4AF37', borderWidth : 1}
-                              ]}
-                    >
-                    </TallaButton>
-                    <TallaButton   
-                        onPress={_login}
-                        label={'Login'}
-                        labelColor={'#FFF'}
-                        isModal
-                        style={[ModalStyle.SecondaryButton,{flex:1}]}>
-                    </TallaButton>
-            </View>
-
-      </View>
+              </TouchableRipple>
+        </View>
+        <View style={{flexDirection:'row',marginBottom : 10}}>
+              <TallaButton   
+                    onPress={props.onClose}
+                    label ={'cancel'}
+                    labelColor={'#D4AF37'}
+                    isModal
+                    style={[ModalStyle.SecondaryButton,
+                            {backgroundColor:'#FFF', marginEnd : 10, flex:1,
+                              borderColor  : '#D4AF37', borderWidth : 1}
+                          ]}
+                >
+                </TallaButton>
+                <TallaButton   
+                    onPress={_login}
+                    label={'Login'}
+                    labelColor={'#FFF'}
+                    isModal
+                    style={[ModalStyle.SecondaryButton,{flex:1}]}>
+                </TallaButton>
+        </View>
+      </KeyboardAvoidingView>
    </Modal>
 }
 

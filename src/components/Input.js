@@ -73,6 +73,7 @@ const Input = ({ ...props }) => {
           }]}
           placeholderTextColor={props.placeholderColor}
           secureTextEntry={props.password}
+          returnKeyType={'done'}
           keyboardType={props.isNumeric ? 'number-pad' : props.isEmail ? 'email-address': 'default'}
         />
     </Animatable.View>

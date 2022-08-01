@@ -30,6 +30,7 @@ const Messages = props => {
     await api
           .get(`${endpoints.chats}${apiParams}`)
           .then(res => {
+            console.log(res.data.data)
             setChats(res.data.data);
           })
           .catch((err) => {
@@ -101,13 +102,14 @@ const Messages = props => {
                           {backgroundColor: item.isRead ? '#D4AF37' : '#FFF'}]}
               >
                 <FastImage source={
-                    !item.stylist.avatar || !item.user.profile.avatar
-                    ? require('../assets/images/logo.png')
-                    : {
+                  (item.stylist && item.stylist.avatar) 
+                    ? {
                       uri: user.activeUserType === 'user'
                           ? item.stylist.avatar
                           : item.user.profile.avatar
                     }
+                    : require('../assets/images/logo.png')
+                    
                   }
                   resizeMode={'cover'}
                   style={{
@@ -121,7 +123,7 @@ const Messages = props => {
                         <Text style={[GeneralStyle.blackBoldText,{fontSize : 16}]}>
                             {
                               user.activeUserType === 'user'
-                                ? item.stylist.user.name
+                                ? item.stylist ? item.stylist.user.name : 'Not provided'
                                 : item.user.name
                             }
                         </Text>

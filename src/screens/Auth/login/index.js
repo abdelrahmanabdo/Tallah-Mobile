@@ -169,6 +169,7 @@ const Login = ({...props}) => {
           </Text>
         </BorderlessButton>
       </View>
+
       <SocialLogin 
         screen="login"
         navigation={props.navigation}

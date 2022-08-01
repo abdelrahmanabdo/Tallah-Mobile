@@ -113,40 +113,37 @@ const MoreTab = props => {
                 navigation.navigate(user.account.profile ? 'profile' : 'createProfile', 
                 { stylistId: stylist.profile 
                     ? stylist.profile.id 
-                    : null })
-              }
+                    : null }) }
             }
           />
         }
-        {/* <ListItem   icon={require('../../assets/icons/closet-value.png')} 
-                    label={'Closet value'} 
-                    onPress={()=>{navigation.navigate('')}}/> */}
         {
           (user.isLoggedIn && user.activeUserType !== 'stylist') &&
             <ListItem   
-                icon={require('../../assets/icons/outfits.png')}
-                label={'Outfits'} 
-                onPress={()=>{navigation.navigate('outfits')}}/>
+              icon={require('../../assets/icons/outfits.png')}
+              label={'Outfits'} 
+              onPress={()=> navigation.navigate('outfits')}
+            />
         }
 
         {
           user.isLoggedIn && 
           <ListItem   icon={require('../../assets/icons/more-calendar.png')} 
                       label={'Calendar'} 
-                      onPress={()=>{navigation.navigate('calendar')}} />
+                      onPress={()=> navigation.navigate('calendar')} />
         }
 
         {
           (user.isLoggedIn && user.activeUserType !== 'stylist') &&
             <ListItem   icon={require('../../assets/icons/favourites.png')} 
                         label={'Favourites'} 
-                        onPress={()=>{navigation.navigate('favourites')}} />
+                        onPress={()=> navigation.navigate('favourites')} />
         }
         {
           user.isLoggedIn &&
             <ListItem   icon={require('../../assets/icons/messages.png')}
                         label={'Messages'} 
-                        onPress={()=>{navigation.navigate('messages')}} />
+                        onPress={()=> navigation.navigate('messages')} />
         }
         {
           (user.isLoggedIn && user.activeUserType === 'stylist') &&
@@ -155,26 +152,35 @@ const MoreTab = props => {
                         onPress={()=>{navigation.navigate('stylistRequestSteps')}} />
         }
 
-        <ListItem   icon={require('../../assets/icons/about-app.png')} 
-                    label={'About the app'} 
-                    onPress={()=>{navigation.navigate('about')}} />
+        <ListItem   
+          icon={require('../../assets/icons/about-app.png')} 
+          label={'About the app'} 
+          onPress={()=> navigation.navigate('about')} 
+        />
         {
           user.isLoggedIn &&
           <ListItem   icon={require('../../assets/icons/settings.png')} 
             label={'Settings'} 
-            onPress={()=>{navigation.navigate('settings')}}/>
+            onPress={()=> navigation.navigate('settings')}
+          />
         }
-        <ListItem   icon={require('../../assets/icons/help-support.png')} 
-                    label={'Help & Support'} 
-                    onPress={()=>{navigation.navigate('support')}}/>
-        <ListItem   icon={require('../../assets/icons/T-&-C.png')} 
-                    label={'T&C'} 
-                    onPress={()=>{navigation.navigate('TAndC')}}/>
+        <ListItem   
+          icon={require('../../assets/icons/help-support.png')} 
+          label={'Help & Support'} 
+          onPress={()=>{navigation.navigate('support')}}
+        />
+        <ListItem   
+          icon={require('../../assets/icons/T-&-C.png')} 
+          label={'T&C'} 
+          onPress={()=> navigation.navigate('TAndC')}
+        />
         {
           !user.isLoggedIn && 
-          <ListItem   icon={require('../../assets/icons/profile.png')} 
-                      label={'Login'} 
-                      onPress={()=>{navigation.navigate('login')}} />                   
+          <ListItem
+            icon={require('../../assets/icons/profile.png')} 
+            label={'Login'} 
+            onPress={()=> navigation.navigate('Auth')} 
+          />                   
         }
         {
           user.isLoggedIn &&

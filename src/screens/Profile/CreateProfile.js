@@ -168,8 +168,7 @@ const CreateProfile = ({...props}) => {
         let options = {
           storageOptions: {
             skipBackup: true,
-            path: 'images',
-            includeBase64: true,
+            includeExtra: true,
           },
         };
         ImagePicker.launchImageLibrary(options, async (response) => {
@@ -291,6 +290,11 @@ const CreateProfile = ({...props}) => {
           title: 'Hourglass',
           image: require('../../assets/images/hourglass-shape.png'),
         },
+        {
+          id: 6,
+          title: 'Not Sure',
+          image: require('../../assets/images/not-sure-shape.png'),
+        },
       ]);
 
       /**
@@ -306,9 +310,11 @@ const CreateProfile = ({...props}) => {
             isRadio={true}
             item={item}
             isCurrentSelected={selected == item.item.id}
-            onSelect={ value => {
+            onSelect={(value) => {
               setSelected(value);
-              if(value == 6) props.navigation.navigate('bodyShapeCalculator')
+              console.log({ ss: item.item });
+              if (item.item.title == 'Not Sure' || value == 6)
+                props.navigation.navigate('bodyShapeCalculator')
             }}
         />
       }
@@ -861,7 +867,7 @@ const CreateProfile = ({...props}) => {
             }
           </Text>
           <View style={style.skipButton} >
-            <BorderlessButton  onPress={() => props.navigation.navigate('Home')}>
+            <BorderlessButton  onPress={() => props.navigation.goBack()}>
               <Text style={style.skipText}>
                 {user.isCompletedProfile
                   ? I18n.t('finish')

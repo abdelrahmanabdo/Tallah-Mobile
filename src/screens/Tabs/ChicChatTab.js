@@ -38,7 +38,10 @@ const ChicChatTab = props => {
           setBlogs(res.data.data);
           setIsLoading(false);
         })
-        .catch(err => console.error(`Erro while getting blogs ${JSON.stringify(err.response)}`));
+        .catch(err => {
+          console.log(`Erro while getting blogs ${JSON.stringify(err.response)}`);
+          getBlogs();
+        });
     };
 
     /**
@@ -127,46 +130,26 @@ const ChicChatTab = props => {
           isLoading
           ? <Spinner />
           : <>
-              <View>
-                {/* <View style={[GeneralStyle.row , style.grayContainer]}>
-                    <BorderlessButton   style={[style.tabButton , {backgroundColor : activeTab == 1 ? '#D4AF37' : '#FFF'}]}
-                                        onPress={() => {changeActiveTabe(1)}} >
-                        <Text style={[style.tabButtonText , {color : activeTab == 1 ? '#FFF' : '#D4AF37'}]}>
-                            All
-                        </Text>
-                    </BorderlessButton>
-                    <BorderlessButton   style={[style.tabButton , {backgroundColor : activeTab == 2 ? '#D4AF37' : '#FFF'}]}
-                                        onPress={() => {changeActiveTabe(2)}} >
-                        <Text style={[style.tabButtonText , {color : activeTab == 2 ? '#FFF' : '#D4AF37'}]}>
-                            New
-                        </Text>
-                    </BorderlessButton>
-                    <BorderlessButton   style={[style.tabButton , {backgroundColor : activeTab == 4 ? '#D4AF37' : '#FFF'}]}
-                                        onPress={() => {changeActiveTabe(4)}} >
-                        <Text style={[style.tabButtonText , {color : activeTab == 4 ? '#FFF' : '#D4AF37'}]}>
-                            Popular
-                        </Text>
-                    </BorderlessButton>
-                </View> */}
-              <View>
-                <Text style={[GeneralStyle.blackBoldText , {fontSize : 16 , margin:12, marginVertical: 5}]}>
-                    What's New ?
-                </Text>
-                <FlatList 
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  data={newBlogs}
-                  style={{paddingVertical : 15, marginHorizontal : 4}}
-                  keyExtractor={(item,index) => index.toString()}
-                  renderItem={renderNewBlogs}
-                />
-              </View>
+            <View>
+              <Text style={[GeneralStyle.blackBoldText , {fontSize : 16 , margin:12, marginVertical: 5}]}>
+                What's New ?
+              </Text>
+
+              <FlatList 
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={newBlogs}
+                style={{paddingVertical : 15, marginHorizontal : 4}}
+                keyExtractor={(item,index) => item.id + new Date()}
+                renderItem={renderNewBlogs}
+              />
+
               <FlatList
                 horizontal={false}
                 showsVerticalScrollIndicator={false}
                 data={blogs}
                 contentContainerStyle={{paddingVertical: 5, marginHorizontal: 6}}
-                keyExtractor={(item,index) => index}
+                keyExtractor={(item,index) => item.id + new Date()}
                 renderItem={renderBlogBox}
               />
             </View>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, ImageBackground, FlatList, PanResponder,
          ScrollView, Animated, Pressable, Dimensions, Platform, SafeAreaView } from 'react-native';
-import { RectButton, BorderlessButton, TouchableOpacity,  } from 'react-native-gesture-handler';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { RectButton, BorderlessButton  } from 'react-native-gesture-handler';
 import FastImage from 'react-native-fast-image';
 import { useSelector } from 'react-redux';
 import * as ImagePicker from 'react-native-image-picker';
@@ -29,7 +30,6 @@ import api from '../../config/api';
 import endpoints from '../../config/endpoints';
 import NotFound from '../../components/NotFound';
 import AsyncStorage from '@react-native-community/async-storage';
-import KeyboardAvoidingView from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
 
 const {width} = Dimensions.get('screen');
 
@@ -43,6 +43,7 @@ const AddTab = ({ route, ...props}) => {
   const [categories , setCategories ] = useState([]);
   const [brands , setBrands ] = useState([]);
   const [colors, setColors ] = useState([]);
+  const keyboardVerticalOffset = Platform.OS === 'ios' ? 10 : 0;
 
   /**
   * Get categories
@@ -84,13 +85,12 @@ const AddTab = ({ route, ...props}) => {
     let options = {
       storageOptions: {
         skipBackup: true,
-        path: 'images',
-        includeBase64: true,
+        includeExtra: true,
       },
     };
     await ImagePicker
       .launchImageLibrary(options, (response) => {
-        console.log({response});
+        console.log({response: JSON.stringify(response)});
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.errorCode) {
@@ -107,7 +107,9 @@ const AddTab = ({ route, ...props}) => {
   const launchCamera = async () => {
     let options = {
       storageOptions: {
-        saveToPhotos: true
+        skipBackup: true,
+        saveToPhotos: true,
+        includeExtra: true,
       },
     };
     await ImagePicker
@@ -121,6 +123,7 @@ const AddTab = ({ route, ...props}) => {
           setShowCameraModal(false);
           const avatarData = response.assets[0];
           setImage(avatarData);
+          console.log({ avatarData });
           setAddItemData({
             ...addItemData,
             image: avatarData,
@@ -281,28 +284,26 @@ const AddTab = ({ route, ...props}) => {
           });
         }
 
-        return <ScrollView showsVerticalScrollIndicator={false}>
-          <KeyboardAvoidingView behavior = {Platform.OS === "ios" ? "position" : "height"} >
-            <Dropdown 
-              items={brands}
-              onChangeValue={val => setSelectedBrand(val)}
-              name={I18n.t('brand')}
-            />
-            <Input
-              name={I18n.t('price')}
-              color={'#000'}
-              onChangeText={value => setPrice(value) }
-              placeholderText={'Price in EGP'}
-            />
-            <Input  
-              name={I18n.t('comment')} 
-              onChangeText={value => setComment(value)}
-              isTextarea 
-              color={'#000'}
-              rowsCount={3}
-              placeholderText={'Comment....'}
-            />             
-          </KeyboardAvoidingView>
+        return <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+          <Dropdown 
+            items={brands}
+            onChangeValue={val => setSelectedBrand(val)}
+            name={I18n.t('brand')}
+          />
+          <Input
+            name={I18n.t('price')}
+            color={'#000'}
+            isNumeric
+            onChangeText={value => setPrice(value) }
+            placeholderText={'Price in EGP'}
+          />
+          <Input  
+            name={I18n.t('comment')} 
+            onChangeText={value => setComment(value)}
+            color={'#000'}
+            rowsCount={3}
+            placeholderText={'Comment....'}
+          />             
           <Button 
             label ={'Save'}
             style={{width : '90%',padding : 15}}
@@ -310,7 +311,7 @@ const AddTab = ({ route, ...props}) => {
             labelColor={'#FFF'}
             isLoading={isLoading}
           />
-        </ScrollView>
+        </KeyboardAwareScrollView>
     };
 
 
@@ -521,7 +522,7 @@ const AddTab = ({ route, ...props}) => {
       </Modal>
     };
 
-    return <View style={[GeneralStyle.container]}>
+    return <View style={[GeneralStyle.container, {flex: 1}]}>
       <SafeAreaView style={GeneralStyle.header}>
         <View style={[GeneralStyle.rowSpaceBetween,{width : '90%'}]}>
           <RectButton style={{ flex: 1 }}>

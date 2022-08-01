@@ -61,6 +61,7 @@ const Phone = ({ ...props }) => {
         initialValue={props.defaultValue}
         onChangePhoneNumber={props.onChangeText}
         style={Style.input}
+        returnKeyType={'done'}
         textStyle={{
           color: '#012647',
         }}

@@ -45,8 +45,7 @@ const AddProject = props => {
       let options = {
         storageOptions: {
           skipBackup: true,
-          path: 'images',
-          includeBase64: true,
+          includeExtra: true,
         },
       };
       ImagePicker.launchImageLibrary(options, async (response) => {

@@ -59,10 +59,10 @@ const Datepicker = ({...props}) => {
                 backgroundColor: 'red',
               },
               datePickerCon: {
-                backgroundColor: Platform.OS === 'ios' ? '#F0CB50' : '#FFF',
+                backgroundColor: Platform.OS === 'ios' ? '#043B6C' : '#FFF',
               },
               btnTextConfirm: {
-                color: '#393B3C',
+                color: '#D4AF37',
                 fontWeight: 'bold'
               }
             }}
