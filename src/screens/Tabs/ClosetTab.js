@@ -42,10 +42,7 @@ const ClosetTab = ({ ...props }) => {
     */
     const getCategories = () => {
         api.get(endpoints.categories)
-           .then(res => {
-             console.log(res.data.data);
-             setCategories(res.data.data);
-            });
+           .then(res => setCategories(res.data.data));
     };
 
     /**

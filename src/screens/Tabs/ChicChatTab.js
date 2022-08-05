@@ -15,7 +15,6 @@ import api from '../../config/api';
 import endpoints from '../../config/endpoints';
 
 //Components
-import LoginModal from '../../components/LoginModal';
 import Spinner from '../../components/Spinner';
 
 const width = Dimensions.get('window').width ;
@@ -24,7 +23,6 @@ const ChicChatTab = props => {
   const user = useSelector(state => state.user);
   const [blogs , setBlogs ] = useState([]);
   const [newBlogs, setNewBlogs ] = useState([]);
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
     /**
@@ -36,12 +34,12 @@ const ChicChatTab = props => {
       api.get(endpoints.blog)
         .then(res => {
           setBlogs(res.data.data);
-          setIsLoading(false);
         })
         .catch(err => {
           console.log(`Erro while getting blogs ${JSON.stringify(err.response)}`);
           getBlogs();
-        });
+        })
+        .finally(() => setIsLoading(false));
     };
 
     /**
@@ -61,10 +59,10 @@ const ChicChatTab = props => {
     const renderNewBlogs = ({item}) => {
       return <BaseButton 
         style={[style.newBlogBox]} 
-        onPress={ () => props.navigation.navigate('blogView', {blogId: item.id})} >
+        onPress={ () => props.navigation.push('BlogPage', {blogId: item.id})} >
           <ImageBackground 
             source={item.image ? {uri: item.image.image} : require('../../assets/images/blog-default.png')}
-            style={{width : '100%' , height : 120 , justifyContent:'flex-end',
+            style={{width: '100%', height : 120 , justifyContent:'flex-end',
                     borderRadius : 15 , overflow :'hidden'}}>
               <Text style={[style.newBlogText]} numberOfLines = {2}>
                 {item.title}
@@ -80,7 +78,7 @@ const ChicChatTab = props => {
     const renderBlogBox = ({item}) => {
       return <BlogBox 
         data={item} 
-        onPress={ () => props.navigation.navigate('blogView', {blogId: item.id})} 
+        onPress={ () => props.navigation.push('BlogPage', {blogId: item.id})} 
       />
     };
 
@@ -130,7 +128,7 @@ const ChicChatTab = props => {
           isLoading
           ? <Spinner />
           : <>
-            <View>
+            <View style={{ flex: 1}}>
               <Text style={[GeneralStyle.blackBoldText , {fontSize : 16 , margin:12, marginVertical: 5}]}>
                 What's New ?
               </Text>
@@ -140,7 +138,7 @@ const ChicChatTab = props => {
                 showsHorizontalScrollIndicator={false}
                 data={newBlogs}
                 style={{paddingVertical : 15, marginHorizontal : 4}}
-                keyExtractor={(item,index) => item.id + new Date()}
+                keyExtractor={(item,index) => index + new Date()}
                 renderItem={renderNewBlogs}
               />
 
@@ -151,24 +149,21 @@ const ChicChatTab = props => {
                 contentContainerStyle={{paddingVertical: 5, marginHorizontal: 6}}
                 keyExtractor={(item,index) => item.id + new Date()}
                 renderItem={renderBlogBox}
+                initialNumToRender={2} 
+                removeClippedSubviews={true}
               />
-            </View>
-            <Button 
-              label={'Write with us'}
-              labelColor={'#FFF'}
-              style={{width : '93%', position: 'absolute', bottom: 0, paddingVertical: 15}}
-              onPress={() => {
-                  if (!user.isLoggedIn) return setShowLoginModal(true);
-                  props.navigation.navigate('chicChatIntro');
-              }}
-            />
-          </>
-        }
-
-        <LoginModal  
-          showModal={showLoginModal} 
-          onClose={() => setShowLoginModal(false)}
-        />
+          </View>
+          <Button 
+            label={'Write with us'}
+            labelColor={'#FFF'}
+            style={{width : '93%', position: 'absolute', bottom: 0, paddingVertical: 15}}
+            onPress={() => {
+                if (!user.isLoggedIn) return props.navigation.navigate('Auth');
+                props.navigation.navigate('chicChatIntro');
+            }}
+          />
+        </>
+      }
     </SafeAreaView> 
   );
 };

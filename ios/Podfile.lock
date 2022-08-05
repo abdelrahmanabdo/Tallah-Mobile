@@ -386,8 +386,8 @@ PODS:
   - react-native-fbsdk/Share (3.0.0):
     - FBSDKShareKit (~> 8.1)
     - React
-  - react-native-image-picker (4.7.3):
-    - React-Core
+  - react-native-image-picker (0.14.3):
+    - React
   - react-native-netinfo (8.0.0):
     - React-Core
   - react-native-pager-view (5.4.11):
@@ -848,7 +848,7 @@ SPEC CHECKSUMS:
   React-logger: 9a9cd87d4ea681ae929b32ef580638ff1b50fb24
   react-native-cookies: ce50e42ace7cf0dd47769260ca5bbe8eee607e4e
   react-native-fbsdk: 8e92c7a334fd8d9c2b5d8b8fcd7ae2c314161099
-  react-native-image-picker: ae1202414bd5c37c00b2a701daa5b6194a06b7d9
+  react-native-image-picker: 3693786b3d5958c8f71deed66ec068b323565e0d
   react-native-netinfo: 0124c0695373fce63cea24aeebb97ab2d237947a
   react-native-pager-view: fb87ee16641224bfc41e94e6b276f106ce584b74
   react-native-safe-area-context: d768fdafd416b4c0bdc7bef4240c9ee53909baf3

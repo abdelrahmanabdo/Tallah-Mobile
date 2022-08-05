@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, ImageBackground, FlatList, PanResponder,
-         ScrollView, Animated, Pressable, Dimensions, Platform, SafeAreaView } from 'react-native';
+         ScrollView, Animated, Pressable, Dimensions, SafeAreaView } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { RectButton, BorderlessButton  } from 'react-native-gesture-handler';
 import FastImage from 'react-native-fast-image';
 import { useSelector } from 'react-redux';
 import * as ImagePicker from 'react-native-image-picker';
 import Modal from 'react-native-modal';
+import AsyncStorage from '@react-native-community/async-storage';
 
 //Styles
 import GeneralStyle from '../../assets/styles/GeneralStyle';
@@ -29,7 +30,6 @@ import Selector from '../../components/Selector';
 import api from '../../config/api';
 import endpoints from '../../config/endpoints';
 import NotFound from '../../components/NotFound';
-import AsyncStorage from '@react-native-community/async-storage';
 
 const {width} = Dimensions.get('screen');
 
@@ -43,7 +43,6 @@ const AddTab = ({ route, ...props}) => {
   const [categories , setCategories ] = useState([]);
   const [brands , setBrands ] = useState([]);
   const [colors, setColors ] = useState([]);
-  const keyboardVerticalOffset = Platform.OS === 'ios' ? 10 : 0;
 
   /**
   * Get categories
@@ -83,6 +82,7 @@ const AddTab = ({ route, ...props}) => {
 
   const launchImageLibrary = async () => {
     let options = {
+      noData: true,
       storageOptions: {
         skipBackup: true,
         includeExtra: true,
@@ -90,22 +90,21 @@ const AddTab = ({ route, ...props}) => {
     };
     await ImagePicker
       .launchImageLibrary(options, (response) => {
-        console.log({response: JSON.stringify(response)});
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.errorCode) {
           console.log('ImagePicker Error: ', response.errorCode);
         } else {
           setShowCameraModal(false);
-          let avatarResult = response.assets[0];
-          setImage(avatarResult);
-          setAddItemData({...addItemData, image: avatarResult});
+          setImage(response);
+          setAddItemData({...addItemData, image: response});
         }
     });
    };
 
   const launchCamera = async () => {
     let options = {
+      noData: true,
       storageOptions: {
         skipBackup: true,
         saveToPhotos: true,
@@ -114,19 +113,16 @@ const AddTab = ({ route, ...props}) => {
     };
     await ImagePicker
       .launchCamera(options, (response) => {
-        console.log({ response });
         if (response.didCancel) {
           console.log('User cancelled image picker');
-        } else if (response.errorCode) {
-          console.log('Camera Error: ', response.errorCode);
+        } else if (response.error) {
+          console.log('Camera Error: ', response.error);
         } else {
           setShowCameraModal(false);
-          const avatarData = response.assets[0];
-          setImage(avatarData);
-          console.log({ avatarData });
+          setImage(response);
           setAddItemData({
             ...addItemData,
-            image: avatarData,
+            image: response,
           });
         }
     });
@@ -279,7 +275,6 @@ const AddTab = ({ route, ...props}) => {
           })
           .catch(err => {
             setIsLoading(false);
-            console.log(JSON.stringify(err))
             new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
           });
         }
@@ -384,7 +379,6 @@ const AddTab = ({ route, ...props}) => {
               'items'  : selectedItems.map(item => item.id),
             })
             .then(res => {
-              console.log(res.data);
               setSelectedItems([]);
               setSelectedItem(null);
               setIsLoading(false);
@@ -392,7 +386,6 @@ const AddTab = ({ route, ...props}) => {
             })
             .catch(err => {
               setIsLoading(false);
-              console.log(JSON.stringify(err.response))
               new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
             });
         };

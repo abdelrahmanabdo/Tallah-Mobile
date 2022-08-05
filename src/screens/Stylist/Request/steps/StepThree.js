@@ -111,8 +111,9 @@ const StepThree = props => {
     }
 
     return <Modal
-              isVisible={showAddModal}
-              style={{margin: 0,justifyContent:'flex-end' ,}}
+            avoidKeyboard
+            isVisible={showAddModal}
+            style={{margin: 0,justifyContent:'flex-end' ,}}
           >
           <View style={[ModalStyle.actionModalContainer]}
                 showsVerticalScrollIndicator={false}>
@@ -155,6 +156,7 @@ const StepThree = props => {
                     onChangeText={(value) => setYearsOfIssuance(value)}
                     placeholderColor={'#ccc'} 
                     color={'#000'}
+                    isNumeric
                     defaultValue={isEdit ? certificates[editedItemIndex].issurance_year : null}
               />
               <TallahButton  

@@ -8,25 +8,25 @@ import Share from "react-native-share";
 // Styles 
 import style from '../assets/styles/BlogBoxStyle';
 
-import AddToFavourites from './AddToFavourites';
-
 const BlogBox = props => {
-   const [blog , setBlog ] = useState(props.data)
+   const [blog , setBlog ] = useState(props.data);
 
 
   /**
     * Share Item
-    */
-   const share = ( ) => {
+  */
+   const share = () => {
       const url = "https://tallah.co/" + blog.title;
-      const title = blog.title;
-      const message = blog.body.substr(0, 50);
-      const icon = blog.image.image;
+      const title = blog.title_en;
+      const message = blog.body.substr(0, 50)
+        .replace(/(&nbsp;|&quot;|(<([^>]+)>))/ig, "")
+        .replace(/&rsquo;/ig, "'");
+      const icon = blog.image?.image;
 
       const options = Platform.select({
          ios: {
            activityItemSources: [
-             { // For using custom icon instead of default text icon at share preview when sharing with message.
+             { 
                placeholderItem: {
                  type: 'url',
                  content: url
@@ -52,10 +52,7 @@ const BlogBox = props => {
          },
        });
 
-      Share
-         .open(options)
-         .then(res => console.log(res))
-         .catch(err => console.log(err));
+      Share.open(options);
    };
 
    return <View style={[style.container]}>
@@ -89,9 +86,11 @@ const BlogBox = props => {
           onPress={props.onPress}
         >
           <FastImage  
-            source={blog.image ? {uri: blog.image.image} : require('../assets/images/blog-default.png')}
+            source={blog.image 
+               ? {uri: blog.image.image} 
+               : require('../assets/images/blog-default.png')}
             style={[style.blogImage]}
-            resizeMode={'stretch'}
+            resizeMode={'cover'}
           />
           <Text style={[style.blogText]} numberOfLines={3}>
             {

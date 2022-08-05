@@ -2,12 +2,13 @@ import React, {
   useState,
   useEffect
 } from 'react';
-import { Text, View, ImageBackground , FlatList , ScrollView, SafeAreaView, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
+import { Text, View, ImageBackground , FlatList , ScrollView, SafeAreaView, Platform } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { BorderlessButton , BaseButton } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import Modal from 'react-native-modal';
 import * as ImagePicker from "react-native-image-picker";
+
 //Styles
 import style from '../../assets/styles/NewBlogStyle';
 import GeneralStyle from '../../assets/styles/GeneralStyle';
@@ -54,25 +55,26 @@ const NewBlog = props  => {
 
   const launchCamera = async () => {
     let options = {
+      noData: true,
       storageOptions: {
         saveToPhotos: true
       },
     };
     await ImagePicker
       .launchCamera(options, (response) => {
-        console.log({ response });
         if (response.didCancel) {
           console.log('User cancelled image picker');
-        } else if (response.errorCode) {
-          console.log('Camera Error: ', response.errorCode);
+        } else if (response.error) {
+          console.log('Camera Error: ', response.error);
         } else {
-          setImages([...images, response.assets[0]]);
+          setImages([...images, response]);
         }
     });
   };
 
   const launchImageLibrary = () => {
     let options = {
+      noData: true,
       storageOptions: {
         skipBackup: true,
         path: 'images',
@@ -88,7 +90,7 @@ const NewBlog = props  => {
         console.log('User tapped custom button: ', response.customButton);
         alert(response.customButton);
       } else {
-        setImages([...images, response.assets[0]]);
+        setImages([...images, response]);
       }
     });
   };

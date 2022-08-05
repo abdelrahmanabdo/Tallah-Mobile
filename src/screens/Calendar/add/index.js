@@ -55,7 +55,6 @@ const AddCalendar = ({ route, navigation, ...props})  => {
       date: data.date,
       event_id: route.params.selectedItem || route.params.outfitId,
     };
-    console.log({newCalendar});
     api.post(endpoints.calendar, newCalendar)
       .then((res) => {
         setData({});

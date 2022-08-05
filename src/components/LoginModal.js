@@ -30,7 +30,6 @@ const LoginModal = props => {
   const [ data, setData ] = useState({password: "" , email: ""});
   const [ errors, setErrors ] = useState({});
   const [ isDoingSomething , setIsDoingSomething ] = useState(false);
-  const keyboardVerticalOffset = Platform.OS === 'ios' ? 64 : 0;
 
     /**
         * Validator
@@ -94,7 +93,7 @@ const LoginModal = props => {
               animationOutTiming={1}
               backdropOpacity={.4}
             >
-      <KeyboardAvoidingView 
+      <View 
         style={[ModalStyle.actionModalContainer]}
         behavior={Platform.OS === "ios" ? "padding" : null}
       >
@@ -141,26 +140,26 @@ const LoginModal = props => {
               </TouchableRipple>
         </View>
         <View style={{flexDirection:'row',marginBottom : 10}}>
-              <TallaButton   
-                    onPress={props.onClose}
-                    label ={'cancel'}
-                    labelColor={'#D4AF37'}
-                    isModal
-                    style={[ModalStyle.SecondaryButton,
-                            {backgroundColor:'#FFF', marginEnd : 10, flex:1,
-                              borderColor  : '#D4AF37', borderWidth : 1}
-                          ]}
-                >
-                </TallaButton>
-                <TallaButton   
-                    onPress={_login}
-                    label={'Login'}
-                    labelColor={'#FFF'}
-                    isModal
-                    style={[ModalStyle.SecondaryButton,{flex:1}]}>
-                </TallaButton>
+          <TallaButton   
+                onPress={props.onClose}
+                label ={'cancel'}
+                labelColor={'#D4AF37'}
+                isModal
+                style={[ModalStyle.SecondaryButton,
+                        {backgroundColor:'#FFF', marginEnd : 10, flex:1,
+                          borderColor  : '#D4AF37', borderWidth : 1}
+                      ]}
+            >
+            </TallaButton>
+            <TallaButton   
+                onPress={_login}
+                label={'Login'}
+                labelColor={'#FFF'}
+                isModal
+                style={[ModalStyle.SecondaryButton,{flex:1}]}>
+            </TallaButton>
         </View>
-      </KeyboardAvoidingView>
+      </View>
    </Modal>
 }
 

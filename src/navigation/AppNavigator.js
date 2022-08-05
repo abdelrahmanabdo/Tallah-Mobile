@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { TabNavigator } from './TabNavigator';
 import OnBoarding from '../screens/Onboarding';
 import { AuthNavigator } from './AuthNavigator';
+import BlogItemView from '../screens/ChicChat/BlogItemView';
 
 const Stack = Platform.os === 'ios'
   ? createNativeStackNavigator()
@@ -36,6 +37,9 @@ export function AppNavigator () {
                       />
         <Stack.Screen name="Auth"
                       component={AuthNavigator}
+                      />
+        <Stack.Screen name="BlogPage"
+                      component={BlogItemView}
                       />
     </Stack.Navigator>
   );

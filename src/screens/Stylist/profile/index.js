@@ -37,18 +37,20 @@ const StylistProfile = ({...props}) => {
            setData(res.data.data);
            setIsLoading(false);
           });
-   }
+   };
 
   /**
    * Render Protfolio item
    */
    const renderProtfolio = ({item}) => {
-      return <RectButton onPress={() => props.navigation.navigate('projectDetails',{projectId: item.id})}>
+      return <BorderlessButton
+        onPress={() => props.navigation.navigate('projectDetails',{projectId: item.id})}
+      >
          <FastImage
-            source={{uri: item.image?.image}}
+            source={{uri: item.images[0]?.image}}
             style={[style.protfolioItem]}
          />
-      </RectButton>
+      </BorderlessButton>
    };
 
    /**
@@ -112,16 +114,15 @@ const StylistProfile = ({...props}) => {
             />
           </View>
       </View>
-   }
+   };
 
 
    useEffect(() => {
      getStylistData();
-   }, [])
+   }, []);
 
    return <View style={[GeneralStyle.container, {flex:1,backgroundColor: "#FFF"}]}>
-      <SafeAreaView style={[ GeneralStyle.header]}
-      >
+      <SafeAreaView style={[ GeneralStyle.header]}>
         <View style={[GeneralStyle.rowSpaceBetween,{ width: '90%' }]}>
           <RectButton 
             style={{flex: 1, padding: 5, borderRadius: 5}} 

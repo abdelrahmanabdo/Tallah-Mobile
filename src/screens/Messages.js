@@ -30,7 +30,6 @@ const Messages = props => {
     await api
           .get(`${endpoints.chats}${apiParams}`)
           .then(res => {
-            console.log(res.data.data)
             setChats(res.data.data);
           })
           .catch((err) => {

@@ -37,7 +37,7 @@ export const TabNavigator = ({params}) => {
         "tabBarActiveTintColor": "#D4AF37",
         "tabBarInactiveTintColor": "#012647",
         "tabBarShowIcon": true,
-        "lazy": false,
+        "lazy": true,
         "tabBarLabelStyle": {
           "fontSize": 7.3,
           "fontFamily": "Roboto",

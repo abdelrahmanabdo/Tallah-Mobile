@@ -12,7 +12,6 @@ const assignNotificationToken = async (userId) => {
 
   await api.post(endpoints.assignUserToken, data)
     .then(async (res) => {
-      console.log(res.data.data)
       await AsyncStorage.setItem('userNotificationToken', token);
     })
     .catch((err) => {

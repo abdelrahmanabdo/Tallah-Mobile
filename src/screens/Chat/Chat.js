@@ -1,8 +1,7 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, ScrollView, SafeAreaView, Dimensions } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { RectButton , BorderlessButton, TextInput  } from 'react-native-gesture-handler';
-import * as Animatable from 'react-native-animatable';
 import * as ImagePicker from "react-native-image-picker";
 import { useSelector } from 'react-redux';
 import moment from 'moment';
@@ -50,7 +49,6 @@ const Chat = ({ route, navigation }) => {
     const apiParams = route.params.chatId
       ? `?chat_id=${route.params.chatId}`
       : `?user_id=${user?.account?.id}&stylist_id=${route.params.stylist.id}`;
-    console.log({ apiParams });
     await api
       .get(`${endpoints.chatMessages}${apiParams}`)
       .then(res => {
@@ -69,6 +67,7 @@ const Chat = ({ route, navigation }) => {
 
   const launchCamera = async () => {
     let options = {
+      noData: true,
       storageOptions: {
         skipBackup: true,
         saveToPhotos: true,
@@ -77,26 +76,27 @@ const Chat = ({ route, navigation }) => {
     };
 
     await ImagePicker.launchCamera(options, (response) => {
-      console.log('Response = ', response);
-      if (response.didCancel) {
-      console.log('User cancelled image picker');
-      } else if (response.errorCode) {
-      console.log('ImagePicker Error: ', response.errorCode);
-      } else {
-        const msg = {
-          ...currentMessage,
-          message: response.assets[0],
-          type: 'Image',
-        };
-        setCurrentMessage({ ...msg });
-        sendMessage({ ...msg });
-      }
-    });
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('Camera Error: ', response.error);
+        } else {
+          const msg = {
+            ...currentMessage,
+            message: response,
+            type: 'Image',
+          };
+          setCurrentMessage({ ...msg });
+          sendMessage({ ...msg });
+        }
+      });
   };
 
   const launchImageLibrary = () => {
     let options = {
+      noData: true,
       storageOptions: {
+        noData: true,
         skipBackup: true,
         path: 'images',
         includeExtra: true,
@@ -110,7 +110,7 @@ const Chat = ({ route, navigation }) => {
       } else {
         const msg = {
           ...currentMessage,
-          message: response.assets[0],
+          message: response,
           type: 'Image',
         };
         setCurrentMessage({ ...msg });
@@ -134,7 +134,6 @@ const Chat = ({ route, navigation }) => {
    };
 
    const sendMessage = async (message) => {
-     console.log({ toData });
     if (currentMessage.message) {
       setChat({
         ...chat,
@@ -148,7 +147,6 @@ const Chat = ({ route, navigation }) => {
       data.append('message', currentMessage.message);
       data.append('type', currentMessage.type);
 
-      console.log(data)
       const token = await AsyncStorage.getItem('token');
       fetch(endpoints.baseUrl + endpoints.sendMessage, {
         method: 'post',
@@ -159,7 +157,6 @@ const Chat = ({ route, navigation }) => {
       })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         setCurrentMessage({ ...currentMessage, message: '', type: 'Text' });
       })
       .catch((err) => {

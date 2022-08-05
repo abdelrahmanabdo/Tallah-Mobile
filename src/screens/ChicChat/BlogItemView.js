@@ -108,9 +108,9 @@ const BlogItemView = props  => {
    }, []);
 
           
-   return <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
+   return <View 
         style={[GeneralStyle.container]}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
       >
       <SafeAreaView style={{
           display: 'flex', 
@@ -274,7 +274,7 @@ const BlogItemView = props  => {
         </Modal>
       </>
     }
-   </KeyboardAvoidingView>
+   </View>
 }
  
 export default BlogItemView;

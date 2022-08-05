@@ -51,7 +51,16 @@ const Outfits = props  => {
         .catch((err) => console.log(err.response));
   };
 
-  useEffect(() => getOutfits(), []);
+  useEffect(() => {
+    getOutfits();
+
+    // Subscribe for the focus Listener
+    props.navigation.addListener('focus', () => {
+      getOutfits();
+    });
+
+    return () => props.navigation.removeListener();
+  }, []);
 
   return  <SafeAreaView style={[GeneralStyle.container]}>
     <View style={[GeneralStyle.header]}>

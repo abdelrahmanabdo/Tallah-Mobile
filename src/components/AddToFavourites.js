@@ -42,7 +42,6 @@ const AddToFavourites = ({
            setIsFavourited(prev => !prev);
          })
          .catch(err => {
-            console.log(err.response)
             new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
          });
    }

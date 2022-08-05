@@ -124,7 +124,6 @@ const ClosetItemView = ({...props}) => {
           })
           .catch(err => {
             setIsLoading(false);
-            console.log(JSON.stringify(err))
             new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
           });
       };

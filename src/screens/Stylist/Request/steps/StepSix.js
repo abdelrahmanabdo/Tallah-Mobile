@@ -68,13 +68,11 @@ const StepSix = ({ navigation }) => {
          })
          .catch(err => {
             setIsLoading(false);
-            console.log(err.response);
             new Snackbar({text : err.response.data.message , type : 'danger'});
          });
    };
 
    useEffect(() => {
-     console.log(stylist.profile.bank_account)
     if (stylist.profile.bank_account) {
       const { bank_account } = stylist.profile;
       const info = {
@@ -84,7 +82,6 @@ const StepSix = ({ navigation }) => {
         branchName: bank_account.branch_name,
         branchAddress: bank_account.branch_address,
       };
-      console.log({info})
       setCard({ ...info });
     }
    },[showSubmitModal]);

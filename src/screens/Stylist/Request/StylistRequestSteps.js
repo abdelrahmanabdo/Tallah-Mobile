@@ -63,7 +63,7 @@ const StylistRequestSteps = props => {
         </Text>
       </View>
       <RectButton 
-        onPress={() => props.navigation.navigate('Home')}
+        onPress={() => props.navigation.goBack()}
         style={[GeneralStyle.SecondaryButton]}
       >
         <Text style={[GeneralStyle.SecondaryButtonText, {paddingHorizontal : 15}]}>

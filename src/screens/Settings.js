@@ -60,10 +60,8 @@ const Settings = props  => {
   const DeleteAccountModal = () => {
 
    const deleteUserAccount = () => {
-    console.log('aaaaa');
      api.post(endpoints.deleteUserAccount, { user_id: user.account.id })
        .then(async (res) => {
-        console.log({res});
          if (res.data.status) {
             navigation.reset({
               index: 0,

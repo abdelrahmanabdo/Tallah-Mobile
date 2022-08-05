@@ -47,6 +47,7 @@ const StepOne = props => {
 
   const launchImageLibrary = () => {
       let options = {
+        noData: true,
         storageOptions: {
           skipBackup: true,
           includeExtra: true,
@@ -61,7 +62,7 @@ const StepOne = props => {
           console.log('User tapped custom button: ', response.customButton);
           alert(response.customButton);
         } else {
-          const avatarResult = response.assets[0];
+          const avatarResult = response;
           setStepOneData({...stepOneData, avatar: avatarResult});
         }
       });
@@ -93,7 +94,6 @@ const StepOne = props => {
           .map((mobile, index) => data.append(`mobile_numbers[${index}]`, mobile));
       }
       if (stepOneData.avatar) data.append('avatar', stepOneData.avatar);
-      console.log(JSON.stringify(stepOneData.mobile_numbers))
       const token = await AsyncStorage.getItem('token');
       await fetch(endpoints.baseUrl + endpoints.stylist, {
           method: 'post',

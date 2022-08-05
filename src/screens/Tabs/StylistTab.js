@@ -58,9 +58,7 @@ const StylistTab = props => {
         },
       });
 
-      Share.open(options)
-         .then(res => console.log(res))
-         .catch(err => console.log(err));
+      Share.open(options);
    };
 
 

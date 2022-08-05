@@ -39,19 +39,17 @@ const StepTwo = props => {
         })
         .catch(err => {
           setIsLoading(false);
-          console.log(err.response)
           new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
         });
   };
 
    useEffect(() => {
-     console.log(stylist)
     //restore previous registered data
     if (stylist)
       setStepTwoData({
         bio: stylist.bio,
         experience_years: JSON.stringify(stylist.experience_years)
-      })
+      });
    }, []);
 
    return <ScrollView 

@@ -36,7 +36,6 @@ const Favourites = props  => {
     * @param {} param0 
     */
   const renderItem = ({item , index}) => {
-    console.log({item})
     if (item.type == 'item') {
       return <ClosetItem key={index} item={item.item} isFavourite={true} />
     } else {
@@ -49,8 +48,7 @@ const Favourites = props  => {
    */
    const getFavorites = () => {
       api.get(endpoints.favourites + '?user_id=' + user.account.id)
-         .then(res => setData(res.data.data))
-         .catch((err) => console.log(err.response));
+         .then(res => setData(res.data.data));
    };
 
   useEffect(() => getFavorites(), []);

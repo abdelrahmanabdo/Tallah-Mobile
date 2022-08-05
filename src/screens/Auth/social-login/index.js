@@ -54,7 +54,6 @@ const SocialLogin = ({ navigation, route }) => {
         }],
       });
     } catch(err) {
-      console.log(err);
       setIsLoading('');
       new Snackbar({
         text: 'Error while login',

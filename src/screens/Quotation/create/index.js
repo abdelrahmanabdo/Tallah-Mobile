@@ -46,7 +46,6 @@ const CreateQuotation = props  => {
 
 
   const submitQuotation = () => {
-    console.log({data});
     props.navigation.navigate('quotationPlaceOrder', { data });
   };
 

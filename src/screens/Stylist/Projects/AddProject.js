@@ -21,7 +21,7 @@ const AddProject = props => {
    const [images , setImages] = useState([]);
 
    const onSubmitModal = () => {
-      if (images.length === 0) return new Snackbar({
+      if (!images.length) return new Snackbar({
         text: 'You have to add at least one image',
         type: 'danger'
       });
@@ -43,6 +43,7 @@ const AddProject = props => {
 
     const launchImageLibrary = () => {
       let options = {
+        noData: true,
         storageOptions: {
           skipBackup: true,
           includeExtra: true,
@@ -51,10 +52,10 @@ const AddProject = props => {
       ImagePicker.launchImageLibrary(options, async (response) => {
         if (response.didCancel) {
           console.log('User cancelled image picker');
-        } else if (response.errorCode) {
-          console.log('ImagePicker Error: ', response.errorCode);
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
         } else {
-          setImages([...images, response.assets[0]]);
+          setImages([...images, response]);
         }
       });
     };
@@ -88,7 +89,11 @@ const AddProject = props => {
       </View>
    }
 
-   return <Modal isVisible={props.showModal} style={{margin: 0,justifyContent:'flex-end'}}>
+   return <Modal
+            avoidKeyboard
+            isVisible={props.showModal}
+            style={{margin: 0,justifyContent:'flex-end'}}
+        >
         <View style={[ModalStyle.actionModalContainer]} showsVerticalScrollIndicator={false}>
          <View style={ModalStyle.actionModalHeader}>
             <View style={{flex:1}}></View>

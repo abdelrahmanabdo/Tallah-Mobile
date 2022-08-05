@@ -27,7 +27,7 @@ import OutfitItemView from '../screens/Closet/OutfitItemView';
 import ClosetTab from '../screens/Tabs/ClosetTab';
 import Calendar from '../screens/Calendar';
 import StylistTab from '../screens/Tabs/StylistTab';
-import { AuthNavigator } from './AuthNavigator';
+import ProjectDetails from '../screens/Stylist/Projects/ProjectDetails';
 import MoreTab from '../screens/Tabs/MoreTab';
 import CreateProfile from '../screens/Profile/CreateProfile';
 import Profile from '../screens/Profile/Profile';
@@ -69,6 +69,9 @@ export function MoreNavigator () {
                        />
          <Stack.Screen name="closetItemView" 
                        component={ClosetItemView}
+                       />
+         <Stack.Screen name="projectDetails" 
+                       component={ProjectDetails}
                        />
          <Stack.Screen name="gift" 
                        component={Gift}

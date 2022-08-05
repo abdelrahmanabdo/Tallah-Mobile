@@ -20,7 +20,6 @@ import I18n from '../../../../lang/I18n';
 import AddProject from '../../Projects/AddProject';
 
 //Apis
-import api from '../../../../config/api';
 import endpoints from '../../../../config/endpoints';
 
 import { updateStylistProfile } from '../../../../redux/actions/stylist';
@@ -34,44 +33,49 @@ const StepFour = props => {
    const [isLoading, setIsLoading] = useState(false);
    const [projects , setProjects] = useState([]);
 
+
+   /*
+   * Submit new Project
+   */
+   const submitNewProject = async (newProject) => {
+    setIsLoading(true);
+    let data = new FormData();
+    data.append('stylist_id', stylist.profile.id);
+    data.append('name', newProject.name);
+    data.append('description', newProject.description);
+    if (newProject.images.length) {
+      newProject.images.forEach((image, key) => data.append(`images[${key}]`, image));
+    }
+
+    const token = await AsyncStorage.getItem('token');
+    fetch(endpoints.baseUrl + endpoints.stylistProject, {
+        method: 'post',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: data,
+      })
+      .then((res) => res.json())
+      .then((res) => {
+        setProjects([...projects, newProject]);
+        new Snackbar({text : 'Project added successfully' , type : 'success'});
+      })
+      .catch((err) => {
+        new Snackbar({text : I18n.t('UnknownError') , type : 'danger'});
+      })
+      .finally(() => setIsLoading(false));
+   };
+
+
    /**
     * Submit current step
     */
    const submitStep = async () => {
-      if (!projects.length) return props.goToNext();
-
-      setIsLoading(true);
-      let data = new FormData();
-      data.append('stylist_id', stylist.profile.id);
-      projects.forEach((project, key) => {
-        data.append(`images[${key}]`, project.images);
-        data.append(`projects[${key}]`, project);
-      });
-      const token = await AsyncStorage.getItem('token');
-      console.log(JSON.stringify(data));
-      fetch(endpoints.baseUrl + endpoints.stylistProject, {
-          method: 'post',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-          body: data,
-        })
-        .then((res) => res.json())
-        .then((res) => {
-            console.log({ res: JSON.stringify(res) });
-          setIsLoading(false);
-          // Update redux stored stylist profile
-          dispatch(updateStylistProfile({
-            ...stylist.profile,
-            projects: res.data
-          }));
-          props.goToNext();
-        })
-        .catch(err => {
-          console.log({ err });
-          setIsLoading(false);
-          new Snackbar({text : err.response.data.message , type : 'danger'});
-        });
+      dispatch(updateStylistProfile({
+        ...stylist.profile,
+        projects,
+      }));
+      props.goToNext();
    };
 
    /**
@@ -138,7 +142,7 @@ const StepFour = props => {
          showModal={showAddModal}
          onCloseModal={() => setShowAddModal(false)}
          onSubmitModal={(newProject) => { 
-            setProjects([...projects , newProject]) ;
+            submitNewProject(newProject);
             setShowAddModal(false);
          }}
       />   

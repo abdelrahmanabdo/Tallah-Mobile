@@ -17,9 +17,9 @@ const OutfitItem = ({item, ...props}) => {
         style={{ flexDirection: 'row', flexWrap: 'wrap', overflow: 'hidden',
               width : width / 3.4, height : 100, marginStart : 8, 
               marginBottom : 15, overflow: 'hidden',borderRadius: 6}}
-        onPress={()=> navigation.push('outfitItemView', {'itemId': item.id}) }>
+        onPress={()=> navigation.push('outfitItemView', {'itemId': item?.id}) }>
       {
-        item.items.map((closetItem, key) => (
+        item?.items?.map((closetItem, key) => (
         <FastImage 
           key={key}
           source={
@@ -37,7 +37,7 @@ const OutfitItem = ({item, ...props}) => {
       }
       </RectButton>
       <View style={{position: 'absolute', top: 10, right: 8}} >
-        <AddToFavourites itemId={item.id} type={'outfit'}  />
+        <AddToFavourites itemId={item?.id} type={'outfit'}  />
       </View>
    </View>
 };

@@ -37,7 +37,6 @@ const StylistsList = props => {
     api
       .get(endpoints.stylist)
       .then(res => {
-        console.log(res.data.data)
         setStylists(res.data.data);
         setSearchResult(res.data.data);
         setIsLoading(false);

@@ -64,7 +64,6 @@ const StepFive = props => {
          })
          .catch(err => {
             setIsLoading(false);
-            console.log(err.response.data);
             new Snackbar({text : err.response.data.message , type : 'danger'});
          });
    };
@@ -225,9 +224,10 @@ const StepFive = props => {
                      name={'Price starts from'}
                      color={'#000'}
                      placeholderColor={'#CCC'}
-                     placeholderText={'Price starts from:'}
+                     placeholderText={'Price starts from: [EGP]'}
                      defaultValue={item.start_price}
                      onChangeText={(value) => specializations[key].start_price = value}
+                     isNumeric
                   />
                   <View
                      style={[GeneralStyle.rowSpaceBetween]}

@@ -24,7 +24,6 @@ import style from '../../assets/styles/ClosetItemViewStyle';
 import TallaButton from '../../components/Button';
 import OutfitItem from '../../components/OutfitItem';
 import ModalStyle from '../../assets/styles/ModalStyle';
-import AddToFavourites from '../../components/AddToFavourites';
 import Checkbox from '../../components/Checkbox';
 
 //Apis
@@ -83,9 +82,7 @@ const OutfitItemView = ({...props}) => {
    const seasonValue = data && data.items.length > 0
      ? data.items.map((item) => item.closet_item).reduce((acc, current, index, outfits) => {
         const currentSeason = ['1', '3'].includes(current.season) ? 'Summer' : 'Winter';
-        if (!acc.includes(currentSeason)) {
-          acc += currentSeason + ( index != outfits.length - 1 ? ', ' : '');
-        }
+        acc += currentSeason + (index == outfits.length - 1 ? ' ' : ', ');
         return acc;
       }, ' ')
     : '';
@@ -354,15 +351,8 @@ const OutfitItemView = ({...props}) => {
             <View style={style.grayContainer}>
               <View style={GeneralStyle.rowSpaceBetween}>
                 <Text style={[style.rowInfo , {color: '#979797', fontSize: 17, fontWeight: '500'}]}>
-                  season: <Text style={{ color: '#000000'}}>{seasonValue}</Text>
+                  Season: <Text style={{ color: '#000000'}}>{seasonValue}</Text>
                 </Text>
-                {/* <BorderlessButton 
-                  rippleColor={'#CCC'}
-                  onPress={()=>{setShowEditModal(true)}}>
-                  <FastImage source={require('../../assets/icons/edit.png')}
-                            style={{width:23,height:23}}
-                  />
-                </BorderlessButton> */}
               </View>
             </View>
             <View style={{flexDirection:'row',justifyContent:'space-between',padding : 15}}>

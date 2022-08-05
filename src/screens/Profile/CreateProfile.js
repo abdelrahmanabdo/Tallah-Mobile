@@ -166,6 +166,7 @@ const CreateProfile = ({...props}) => {
 
       const launchImageLibrary = () => {
         let options = {
+          noData: true,
           storageOptions: {
             skipBackup: true,
             includeExtra: true,
@@ -174,11 +175,10 @@ const CreateProfile = ({...props}) => {
         ImagePicker.launchImageLibrary(options, async (response) => {
           if (response.didCancel) {
             console.log('User cancelled image picker');
-          } else if (response.errorCode) {
-            console.log('ImagePicker Error: ', response.errorCode);
+          } else if (response.error) {
+            console.log('ImagePicker Error: ', response.error);
           } else {
-            console.log({response});
-            setStepOneData({...stepOneData, avatar: response.assets[0]});
+            setStepOneData({...stepOneData, avatar: response});
           }
         });
       }
@@ -186,7 +186,6 @@ const CreateProfile = ({...props}) => {
       useEffect(() => {
         //Get all countries
         getCountries();
-        console.log(stepOneData)
       }, []);
 
       return (
@@ -312,7 +311,6 @@ const CreateProfile = ({...props}) => {
             isCurrentSelected={selected == item.item.id}
             onSelect={(value) => {
               setSelected(value);
-              console.log({ ss: item.item });
               if (item.item.title == 'Not Sure' || value == 6)
                 props.navigation.navigate('bodyShapeCalculator')
             }}
