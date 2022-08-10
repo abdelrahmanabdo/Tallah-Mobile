@@ -39,7 +39,7 @@ const StepTwo = props => {
         })
         .catch(err => {
           setIsLoading(false);
-          new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
+          new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
         });
   };
 

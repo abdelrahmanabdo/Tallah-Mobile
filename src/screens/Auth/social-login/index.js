@@ -10,6 +10,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import { useDispatch } from 'react-redux';
 import {loginUser} from '../../../redux/actions/user';
+import { setStylistProfile } from '../../../redux/actions/stylist';
+import { UserType } from '../../../enums';
+import {
+  assignNotificationToken
+} from '../../../helpers/Auth';
 
 //Apis
 import api from '../../../config/api';
@@ -40,12 +45,17 @@ const SocialLogin = ({ navigation, route }) => {
     try {
       let { data } = await api.post(endpoints.socialLogin, { email, name });
       dispatch(loginUser(data.user, data.token));
+      await assignNotificationToken(data.user.id);
       await AsyncStorage.setItem('isLoggedIn', JSON.stringify(true));
       await AsyncStorage.setItem('token', data.token);
       await AsyncStorage.setItem('account', JSON.stringify(data.user));
       await AsyncStorage.setItem('isCompletedProfile', JSON.stringify(data.user?.profile ? true : false));
-      await AsyncStorage.setItem('activeUserType', JSON.stringify(data.user?.role_id == 2 ? 'stylist' : 'user'));
-      
+      await AsyncStorage.setItem('activeUserType', JSON.stringify(data.user?.role_id == 2 ? UserType.Stylist : UserType.User));
+      if (data.user.stylist) {
+        await AsyncStorage.setItem('stylist', JSON.stringify(data.user.stylist));
+        await AsyncStorage.setItem('activeUserType', UserType.Stylist);
+        dispatch(setStylistProfile(data.user.stylist));
+      }
       setIsLoading('');
       navigation.reset({
         index: 0,

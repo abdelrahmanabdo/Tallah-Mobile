@@ -125,8 +125,8 @@ const StylistProfile = ({...props}) => {
       <SafeAreaView style={[ GeneralStyle.header]}>
         <View style={[GeneralStyle.rowSpaceBetween,{ width: '90%' }]}>
           <RectButton 
-            style={{flex: 1, padding: 5, borderRadius: 5}} 
-            onPress={() => props.navigation.goBack() }
+            style={{padding: 5, borderRadius: 5}} 
+            onPress={() => props.navigation.goBack()}
           >
             <FastImage 
               source={require('../../../assets/icons/back-arrow.png')} 
@@ -135,34 +135,37 @@ const StylistProfile = ({...props}) => {
             />
           </RectButton>
           <Text style={[style.headerText, { flex: 1 }]}>
-              Stylist
+            Stylist
           </Text>
-          <View style={{flex: 1 }} />
         </View>
       </SafeAreaView>
       {
         isLoading 
         ? <Spinner />
-        : <View style={{flex:1}}>
-          <ImageBackground 
-            source={data?.avatar ? {uri: data.avatar} : require('../../../assets/images/closet-item-default.png')}
-            resizeMode={'stretch'}
+        : <View style={{ flex:1 }}>
+          <ImageBackground
             style={style.bgImage}
+            source={
+              data?.avatar
+                ? {uri: data.avatar}
+                : require('../../../assets/images/closet-item-default.png')
+            }
+            resizeMode={'contain'}
           >
             <Text style={[GeneralStyle.secondaryBoldText, 
                           { fontSize : 19, backgroundColor: '#ddd', padding: 10, borderRadius: 12}]}>
                 {data?.user?.name}
             </Text>                           
             <View style={[GeneralStyle.rowSpaceBetween,{width :'90%' , padding : 10}]}>
-              <View style={{alignItems:'center', backgroundColor: '#CCC', padding: 10, borderRadius: 12}}>
+              {/* <View style={{alignItems:'center', backgroundColor: '#CCC', padding: 10, borderRadius: 12}}>
                 <Text style={[GeneralStyle.blackText,{marginBottom:3}]}>
                     Followers
                 </Text>
                 <Text style={{color:"#000" , fontSize : 14}}>
                   {data?.follwers_count ?? 0}
                 </Text>
-              </View>
-              <View style={{alignItems:'center', backgroundColor: '#CCC', padding: 10, borderRadius: 12}}>
+              </View> */}
+              {/* <View style={{alignItems:'center', backgroundColor: '#CCC', padding: 10, borderRadius: 12}}>
                 <Text style={[GeneralStyle.blackText,{marginBottom:3}]}>
                     Rating
                 </Text>
@@ -174,7 +177,7 @@ const StylistProfile = ({...props}) => {
                   isDisabled
                   selectedColor={'#D4AF37'}
                 />
-              </View>
+              </View> */}
             </View>
           </ImageBackground>
           <ScrollView showsVerticalScrollIndicator={false} style={{flex:1}} >

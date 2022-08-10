@@ -91,22 +91,20 @@ const BodyShapeCalculator = ({...props}) => {
       }
 
       setModalText('Your body Shap is');
+      setModalSubText(bodyShape);
+
       if(bodyShape == 'Round'){
-         setModalSubText('Captivating');
-         setModalImage(require('../../assets/images/captivating.png'));
+         setModalImage(require('../../assets/images/round-shape.png'));
       }if(bodyShape == 'Triangle'){
-         setModalSubText('Hottie');
-         setModalImage(require('../../assets/images/hottie.png'));
+         setModalImage(require('../../assets/images/triangle-shape.png'));
       }if(bodyShape == 'Inverted Triangle'){
-         setModalSubText('Charming');
-         setModalImage(require('../../assets/images/charming.png'));
+         setModalImage(require('../../assets/images/inverted-triangle-shape.png'));
       }if(bodyShape == 'Round'){
-         setModalSubText('Attractive');
-         setModalImage(require('../../assets/images/attractive.png'));
+         setModalImage(require('../../assets/images/round-shape.png'));
       }if(bodyShape == 'Rectangle'){
-         setModalSubText('Glamourous');
-         setModalImage(require('../../assets/images/glamorous.png'));
+         setModalImage(require('../../assets/images/rectangle-shape.png'));
       }
+
       setIsConfirmationModal(true);
       setShowModal(true);
    }

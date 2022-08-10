@@ -105,8 +105,8 @@ const Chat = ({ route, navigation }) => {
     ImagePicker.launchImageLibrary(options, async (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
-      } else if (response.errorCode) {
-        console.log('ImagePicker Error: ', response.errorCode);
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
       } else {
         const msg = {
           ...currentMessage,
@@ -172,16 +172,14 @@ const Chat = ({ route, navigation }) => {
    return <View style={[GeneralStyle.container]}>
         <SafeAreaView>
           <View style={[GeneralStyle.rowSpaceBetween]}>
-            <View style={{ flex: 1 }}>
-              <RectButton style={{paddingStart: 15}} onPress={()=>{navigation.goBack()}}>
-                <FastImage 
-                  source={require('../../assets/icons/back-arrow.png')} 
-                  style={{width : 25 , height : 25}} 
-                  resizeMode={'contain'}
-                />
-              </RectButton>
-            </View>
-            <Text style={[GeneralStyle.headerText, { flex: 2 }]}>
+            <RectButton style={{ marginHorizontal: 10, padding: 4, borderRadius: 4}} onPress={()=>{navigation.goBack()}}>
+              <FastImage 
+                source={require('../../assets/icons/back-arrow.png')} 
+                style={{width : 25 , height : 25}} 
+                resizeMode={'contain'}
+              />
+            </RectButton>
+            <Text style={[GeneralStyle.headerText, { flex: 6 }]}>
               {toData?.name}
             </Text>
             <View style={{ flex: 1 }}/>
@@ -196,8 +194,9 @@ const Chat = ({ route, navigation }) => {
               </Text>
             </RectButton>
             <RectButton 
-              style={style.headerButton}
+              style={[style.headerButton, {backgroundColor: '#CCC'}]}
               // onPress={startSession}
+              enabled={false}
             >
               <Text style={style.headerButtonText}>
                 {I18n.t('startSession')}

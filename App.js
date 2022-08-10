@@ -38,7 +38,6 @@ const App = () => {
     fcmService.registerAppWithFCM();
     fcmService.register(onRegister, onNotification, onOpenNotification);
     localNotificationService.configure(onOpenNotification);
-    SplashScreen.hide();
 
     async function onRegister(token) {
       let hasToken = await isStoredDeviceToken();
@@ -66,6 +65,8 @@ const App = () => {
       console.log("[App] onOpenNotification: ", notify);
     };
 
+    SplashScreen.hide();
+
     return () => {
       console.log("[App] unRegister");
       fcmService.unRegister();
@@ -87,6 +88,5 @@ const App = () => {
     </WRootToastApp>
   );
 };
-
 
 export default React.memo(App);

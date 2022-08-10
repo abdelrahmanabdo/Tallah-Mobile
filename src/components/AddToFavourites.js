@@ -28,7 +28,7 @@ const AddToFavourites = ({
     */
    const makeFavorited = () => {
       if (!user) return new Snackbar({text : I18n.t('loginFirst') , type : 'danger'});
-      if (!itemId) return new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
+      if (!itemId) return new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
       
       //Submit data to api
       api.post(endpoints.favourites, {
@@ -42,7 +42,7 @@ const AddToFavourites = ({
            setIsFavourited(prev => !prev);
          })
          .catch(err => {
-            new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
+            new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
          });
    }
 

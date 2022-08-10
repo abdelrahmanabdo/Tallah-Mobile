@@ -134,21 +134,29 @@ const AddTab = ({ route, ...props}) => {
       const [activeCategoryIndex, setActiveCategoryIndex ] = useState(null);
       const [selectedColor , setSelectedColor ] = useState(1);
 
-      /**
-       * Go to step two
-       */
       const navigateToStepTwo = () => {
-        if (!addItemData.image)
-          return new Snackbar({type: 'danger', text: 'You have to select an image for your item'});
+        if (!addItemData.image) {
+          return new Snackbar({
+            type: 'danger',
+            text: 'You have to select an image for your item'
+          });
+        }
 
-        if (!activeCategoryIndex)
-          return new Snackbar({type: 'danger', text: 'You have to select item category'});
+        if (activeCategoryIndex === null) {
+          return new Snackbar({
+            type: 'danger',
+            text: 'You have to select item category'
+          });
+        }
+
         setAddItemData({
             ...addItemData,
             'category_id': categories[activeCategoryIndex].id,
             'color_id': selectedColor,
             'season': selectedSeason  
         });
+
+        //Go to step two
         setAddItemActiveTab(2);
       };
 
@@ -386,7 +394,7 @@ const AddTab = ({ route, ...props}) => {
             })
             .catch(err => {
               setIsLoading(false);
-              new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
+              new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
             });
         };
 

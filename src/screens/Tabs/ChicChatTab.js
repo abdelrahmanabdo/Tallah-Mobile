@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, ImageBackground, StatusBar, FlatList , ScrollView, Dimensions, SafeAreaView } from 'react-native';
+import React, { useState, useEffect, memo } from 'react';
+import { Text, View, ImageBackground, StatusBar, FlatList, Dimensions, SafeAreaView, ActivityIndicator } from 'react-native';
 import { RectButton, BorderlessButton, BaseButton } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 
@@ -24,22 +24,32 @@ const ChicChatTab = props => {
   const [blogs , setBlogs ] = useState([]);
   const [newBlogs, setNewBlogs ] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const limit = 10;
+  const [offset, setOffset] = useState(0);
 
     /**
      * 
      * @param 
      * @returns blogs
      */
-    const getBlogs = () => {
-      api.get(endpoints.blog)
+    const getBlogs = (dataLimit = limit, dataOffset = offset, isRefresh = false) => {
+      api.get(`${endpoints.blog}?limit=${dataLimit}&offset=${dataOffset}`)
         .then(res => {
-          setBlogs(res.data.data);
+          if (isRefresh) {
+            setBlogs(res.data.data);
+          } else {
+            setBlogs([...blogs, ...res.data.data]);
+          }
         })
         .catch(err => {
           console.log(`Erro while getting blogs ${JSON.stringify(err.response)}`);
-          getBlogs();
+          // getBlogs();
         })
-        .finally(() => setIsLoading(false));
+        .finally(() => {
+          setIsLoading(false);
+          setIsRefreshing(false);
+        });
     };
 
     /**
@@ -48,9 +58,8 @@ const ChicChatTab = props => {
      * @returns Latest blogs
      */
     const getLatestBlogs = () => {
-      api.get(endpoints.blog + '?latest=true')
-          .then(res => setNewBlogs(res.data.data))
-          .catch(err => {});
+      api.get(`${endpoints.blog}?latest=true`)
+          .then(res => setNewBlogs(res.data.data));
     };
 
     /**
@@ -59,12 +68,12 @@ const ChicChatTab = props => {
     const renderNewBlogs = ({item}) => {
       return <BaseButton 
         style={[style.newBlogBox]} 
-        onPress={ () => props.navigation.push('BlogPage', {blogId: item.id})} >
+        onPress={ () => props.navigation.push('BlogPage', {blogId: item.id})}>
           <ImageBackground 
             source={item.image ? {uri: item.image.image} : require('../../assets/images/blog-default.png')}
-            style={{width: '100%', height : 120 , justifyContent:'flex-end',
+            style={{width: '100%', height: 120, justifyContent: 'flex-end',
                     borderRadius : 15 , overflow :'hidden'}}>
-              <Text style={[style.newBlogText]} numberOfLines = {2}>
+              <Text style={[style.newBlogText]} numberOfLines={2}>
                 {item.title}
               </Text>
           </ImageBackground>
@@ -72,14 +81,38 @@ const ChicChatTab = props => {
     };
 
 
-    /**
-     * Render vertical new blogs
-     */
+    //Render vertical new blogs
     const renderBlogBox = ({item}) => {
       return <BlogBox 
         data={item} 
         onPress={ () => props.navigation.push('BlogPage', {blogId: item.id})} 
       />
+    };
+
+    const renderFooter = () => {
+      return (
+        <View style={style.footer}>
+         <ActivityIndicator
+            color="#D4AF37"
+            style={{marginLeft: 8}} />
+        </View>
+      );
+    };
+
+    const loadMoreBlogs = () => {
+      const newOffset = offset + limit;
+      setOffset(offset + limit);
+      getBlogs(limit, newOffset);
+    };
+
+    const onRefresh = () => {
+      setIsRefreshing(true);
+      setOffset(0);
+      getBlogs(limit, 0, true);
+    };
+
+    const generateRandomKey = (item = {}, index = 0) => {
+      return Math.floor(item.id * index * Math.random());
     };
 
     useEffect(() => {
@@ -138,7 +171,7 @@ const ChicChatTab = props => {
                 showsHorizontalScrollIndicator={false}
                 data={newBlogs}
                 style={{paddingVertical : 15, marginHorizontal : 4}}
-                keyExtractor={(item,index) => index + new Date()}
+                keyExtractor={(item, index) => item.id * index}
                 renderItem={renderNewBlogs}
               />
 
@@ -147,10 +180,15 @@ const ChicChatTab = props => {
                 showsVerticalScrollIndicator={false}
                 data={blogs}
                 contentContainerStyle={{paddingVertical: 5, marginHorizontal: 6}}
-                keyExtractor={(item,index) => item.id + new Date()}
+                keyExtractor={generateRandomKey}
                 renderItem={renderBlogBox}
                 initialNumToRender={2} 
                 removeClippedSubviews={true}
+                onEndReachedThreshold={0.2}
+                onEndReached={loadMoreBlogs}
+                refreshing={isRefreshing}
+                onRefresh={onRefresh}
+                ListFooterComponent={renderFooter}
               />
           </View>
           <Button 
@@ -168,4 +206,4 @@ const ChicChatTab = props => {
   );
 };
 
-export default ChicChatTab;
+export default memo(ChicChatTab);

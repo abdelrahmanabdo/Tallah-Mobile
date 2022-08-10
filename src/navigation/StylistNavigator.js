@@ -17,6 +17,7 @@ import Call from '../screens/Chat/Call/Details';
 import Answer from '../screens/Chat/Call/Answer';
 import CreateQuotation from '../screens/Quotation/create';
 import QuotationPlaceOrder from '../screens/Quotation/create/place-order';
+import TAndC from '../screens/TAndC';
 
 import StylistTab from '../screens/Tabs/StylistTab';
 import Profile from '../screens/Profile/Profile';
@@ -100,7 +101,10 @@ export function StylistNavigator () {
                        />
          <Stack.Screen name="bodyShapeCalculator" 
                        component={BodyShapeCalculator}
-                       /> 
+                       />
+         <Stack.Screen name="TAndC" 
+                       component={TAndC}
+                       />    
     </Stack.Navigator>
    );
 }

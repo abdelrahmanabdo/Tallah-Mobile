@@ -279,7 +279,7 @@ const ClosetItemView = ({...props}) => {
                props.navigation.goBack();
                return new Snackbar({'type' : 'success', 'text': 'Item deleted successfully'});
             })
-            .catch(() => new Snackbar({text : I18n.t('unknowError') , type : 'danger'}) );
+            .catch(() => new Snackbar({text : I18n.t('unknownError') , type : 'danger'}) );
       }
 
       //Info Modal

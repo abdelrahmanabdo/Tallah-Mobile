@@ -9,6 +9,11 @@ import { TabNavigator } from './TabNavigator';
 import OnBoarding from '../screens/Onboarding';
 import { AuthNavigator } from './AuthNavigator';
 import BlogItemView from '../screens/ChicChat/BlogItemView';
+import Chat from '../screens/Chat/Chat';
+import CreateQuotation from '../screens/Quotation/create';
+import QuotationPlaceOrder from '../screens/Quotation/create/place-order';
+import TAndC from '../screens/TAndC';
+import Messages from '../screens/Messages';
 
 const Stack = Platform.os === 'ios'
   ? createNativeStackNavigator()
@@ -41,6 +46,21 @@ export function AppNavigator () {
         <Stack.Screen name="BlogPage"
                       component={BlogItemView}
                       />
+         <Stack.Screen name="messages" 
+                       component={Messages}
+                       />
+         <Stack.Screen name="chat" 
+                       component={Chat}
+                       />
+         <Stack.Screen name="createQuotation" 
+                       component={CreateQuotation}
+                        />
+         <Stack.Screen name="quotationPlaceOrder" 
+                       component={QuotationPlaceOrder}
+                        />
+         <Stack.Screen name="TAndC" 
+                       component={TAndC}
+                       />   
     </Stack.Navigator>
   );
 }

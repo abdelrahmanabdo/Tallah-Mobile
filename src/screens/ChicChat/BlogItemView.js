@@ -210,8 +210,8 @@ const BlogItemView = props  => {
                     <CommentItem item={item} key={index} />
                   ))
                 :
-                <Text>
-                  No comments till now
+                <Text style={{ marginVertical: 10}}>
+                  No comments till now!
                 </Text>
               }
             </View>
@@ -243,34 +243,36 @@ const BlogItemView = props  => {
             </Pressable>
           </View>
         </View>
-        <Modal visible={showEmojis} 
-              avoidKeyboard={true}
-              animationInTiming={150}
-              animationOutTiming={150}>
-            <EmojiPicker
-              onEmojiSelected={emoji => {
-                  if (!emoji) return setShowEmojis(false);
-                  setComment(comment + emoji);
-              }}
-              rows={9}
-              clearButtonText={'Close'}
-              clearButtonStyle={{color : "#FFF",fontSize : 16, fontWeight : '700'}}
-              emojiSize={23}
-              modalStyle={{zIndex: 1000}}
-              headerStyle={{ color : "#FFF" }}
-              containerStyle={{backgroundColor:'#012647', borderRadius: 10, overflow:'hidden'}}
-              onPressOutside={() => setShowEmojis(false)}
-              localizedCategories={[ // Always in this order:
-                  'Smileys and emotion',
-                  'People and body',
-                  'Animals and nature',
-                  'Food and drink',
-                  'Activities',
-                  'Travel and places',
-                  'Objects',
-                  'Symbols',
-              ]}
-            />
+        <Modal 
+          visible={showEmojis} 
+          avoidKeyboard={true}
+          animationInTiming={150}
+          animationOutTiming={150}
+        >
+          <EmojiPicker
+            onEmojiSelected={emoji => {
+              if (!emoji) return setShowEmojis(false);
+              setComment(comment + emoji);
+            }}
+            rows={9}
+            clearButtonText={'Close'}
+            clearButtonStyle={{color : "#FFF",fontSize : 16, fontWeight : '700'}}
+            emojiSize={23}
+            modalStyle={{zIndex: 1000}}
+            headerStyle={{ color : "#FFF" }}
+            containerStyle={{backgroundColor:'#012647', borderRadius: 10, overflow:'hidden'}}
+            onPressOutside={() => setShowEmojis(false)}
+            localizedCategories={[
+              'Smileys and emotion',
+              'People and body',
+              'Animals and nature',
+              'Food and drink',
+              'Activities',
+              'Travel and places',
+              'Objects',
+              'Symbols',
+            ]}
+          />
         </Modal>
       </>
     }

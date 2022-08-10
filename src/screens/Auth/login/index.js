@@ -32,6 +32,7 @@ import {
   assignNotificationToken
 } from '../../../helpers/Auth';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { UserType } from '../../../enums';
 
 const Login = ({...props}) => {
    const dispatch = useDispatch();
@@ -74,7 +75,7 @@ const Login = ({...props}) => {
                 dispatch(setStylistProfile(res.data.user.stylist));
               }
               await AsyncStorage.setItem('isCompletedProfile' , JSON.stringify(res.data.user.profile ? true : false));
-              await AsyncStorage.setItem('activeUserType', JSON.stringify(res.data.user.role_id == 2 ? 'stylist' : 'user'));
+              await AsyncStorage.setItem('activeUserType', JSON.stringify(res.data.user.role_id == 2 ? UserType.Stylist : UserType.User));
 
               await new Snackbar({text : I18n.t('loginSuccessfully'), type : 'success'});
               if (res.data.user.profile) {

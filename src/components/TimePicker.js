@@ -30,7 +30,7 @@ const TimePicker = ({...props}) => {
       </View>
       <TouchableOpacity style={Style.input} onPress={() => setShowPicker(true)}>
         <Text style={Style.inputTitle}>
-          { selectedValue ? selectedValue :  props.name}
+          { selectedValue || props.name}
         </Text>
         <FastImage 
           source={require('../assets/icons/clock-gold.png')} 
@@ -38,6 +38,7 @@ const TimePicker = ({...props}) => {
           resizeMode="contain"
         />
       </TouchableOpacity>
+      <View>
       {
         showPicker &&
         <DateTimePicker
@@ -46,6 +47,7 @@ const TimePicker = ({...props}) => {
           onChange={onChangeTime}
         />
       }
+      </View>
     </Animatable.View>
   </View>
 };

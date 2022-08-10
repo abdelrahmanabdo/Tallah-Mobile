@@ -52,7 +52,7 @@ const ProjectDetails = props => {
             })
             .catch((err) => {
               console.log(err)
-              new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
+              new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
             });
     };
 
@@ -116,11 +116,12 @@ const ProjectDetails = props => {
             {project.name}
         </Text>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
-          { project && project.stylist_id == stylist.profile.id &&
+          { project && project.stylist_id == stylist.profile?.id &&
             <BorderlessButton onPress={() => setShowDeleteModal(true)}>
-              <FastImage source={require('../../../assets/icons/delete-colored.png')} 
-                          style={{width : 25 , height : 25}} 
-                          resizeMode={'contain'}
+              <FastImage
+                source={require('../../../assets/icons/delete-colored.png')}
+                style={{width : 25 , height : 25}}
+                resizeMode={'contain'}
               />
             </BorderlessButton>
           }             

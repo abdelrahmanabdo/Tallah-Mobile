@@ -198,7 +198,7 @@ const OutfitItemView = ({...props}) => {
             props.navigation.goBack();
             return new Snackbar({'type' : 'success', 'text': 'Outfit deleted successfully'});
         })
-        .catch(() => new Snackbar({text : I18n.t('unknowError') , type : 'danger'}) );
+        .catch(() => new Snackbar({text : I18n.t('unknownError') , type : 'danger'}) );
     };
 
     return <Modal isVisible={showDeleteModal}

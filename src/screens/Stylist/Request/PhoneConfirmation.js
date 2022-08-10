@@ -50,12 +50,14 @@ const PhoneConfirmation = props => {
     */
    const addStylistPhone = async () => {
       if (!validator()) return;
+
       setIsLoading(true);
       api.post(endpoints.stylist, {
           user_id: user.account.id,
           mobile_numbers: [phoneNumber]
         })
         .then( async (res) => {
+          console.log({ res });
           setIsLoading(false);
           if (res.data.success) {
             new Snackbar({

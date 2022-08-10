@@ -354,19 +354,18 @@ const CreateProfile = ({...props}) => {
          setIsLoading(true);
          //Submit data to api
          api.put(endpoints.profile + '/' + user.account?.profile.id, {
-               'body_shape_id' : selected
-            })
-            .then(res => {
-               setIsLoading(false);
-               //Update redux stored user profile
-               dispatch(updateProfile(res.data.data));
-               //Navigate to next step
-               goToNext();
-            })
-            .catch(err => {
-               setIsLoading(false);
-               new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
-            });
+            'body_shape_id' : selected
+          })
+          .then(res => {
+              setIsLoading(false);
+              dispatch(updateProfile(res.data.data));
+              goToNext();
+          })
+          .catch(err => {
+            console.log({ err: err.response });
+              setIsLoading(false);
+              new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
+          });
       }
  
       //Info Modal
@@ -504,7 +503,7 @@ const CreateProfile = ({...props}) => {
             })
             .catch(err => {
                setIsLoading(false);
-               new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
+               new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
             });
       }
 
@@ -601,7 +600,7 @@ const CreateProfile = ({...props}) => {
             })
             .catch(err => {
                setIsLoading(false);
-               new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
+               new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
             });
       }
 
@@ -705,7 +704,7 @@ const CreateProfile = ({...props}) => {
             })
             .catch(err => {
                setIsLoading(false);
-               new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
+               new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
             });
       }
 
@@ -809,7 +808,7 @@ const CreateProfile = ({...props}) => {
           })
           .catch(err => {
             setIsLoading(false);
-              new Snackbar({text : I18n.t('unknowError') , type : 'danger'});
+              new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
           });
       }
 

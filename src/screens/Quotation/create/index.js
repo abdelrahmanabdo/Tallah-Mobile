@@ -46,6 +46,7 @@ const CreateQuotation = props  => {
 
 
   const submitQuotation = () => {
+    if (!data.sessionType || !data.fees) return;
     props.navigation.navigate('quotationPlaceOrder', { data });
   };
 
@@ -56,7 +57,7 @@ const CreateQuotation = props  => {
   return  <SafeAreaView style={[GeneralStyle.container]}>
       <SafeAreaView style={[GeneralStyle.rowSpaceBetween, { marginBottom: 15 }]}>
         <RectButton 
-          style={{ flex: 1, marginHorizontal: 10, padding: 8, borderRadius: 4}}
+          style={{ marginHorizontal: 10, padding: 8, borderRadius: 4}}
           onPress={()=> props.navigation.goBack()}
         >
           <FastImage 
@@ -94,12 +95,11 @@ const CreateQuotation = props  => {
             Preferred Dates for the session
           </Text>
           <DatePicker
-            style={{ width: '90%', marginHorizontal: 15, marginTop: 15 }}
+            style={{ width: '90%', marginTop: 15, marginStart: 15 }}
             mode="date"
-            placeholder={'DD/MM/YYYY'}
             date={data.date}
             format="DD/MM/YYYY"
-            minDate="01/01/2022"
+            minDate="01-01-2022"
             confirmBtnText={I18n.t('confirm')}
             cancelBtnText={I18n.t('cancel')}
             customStyles={{
@@ -107,7 +107,7 @@ const CreateQuotation = props  => {
                 position: 'absolute',
                 right: 5,
                 top: 4,
-                marginLeft: 0
+                marginLeft: 0,
               },
               dateInput: {
                 borderRadius : 8,
@@ -117,6 +117,16 @@ const CreateQuotation = props  => {
                 height: 50,
                 backgroundColor: '#FFF',
                 borderColor: '#E0E0E0'
+              },
+              dateTouchBody: {
+                backgroundColor: 'red',
+              },
+              datePickerCon: {
+                backgroundColor: Platform.OS === 'ios' ? '#043B6C' : '#FFF',
+              },
+              btnTextConfirm: {
+                color: '#D4AF37',
+                fontWeight: 'bold'
               }
             }}
             iconSource={require('../../../assets/icons/calendar-gold.png')}
@@ -143,9 +153,10 @@ const CreateQuotation = props  => {
             name={'Fees'}
             onChangeText={(value) => setData({...data, fees: value})}
             placeholderText={'Price in EGP'}
-            isNumeric={true}
+            isNumeric
             color={'#393B3C'}
-            placeholderColor={'#C3C3C3'} 
+            placeholderColor={'#C3C3C3'}
+            returnKeyType={'done'}
           />
         </View>
       </ScrollView>

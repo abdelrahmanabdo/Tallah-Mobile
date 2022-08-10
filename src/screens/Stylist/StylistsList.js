@@ -79,12 +79,13 @@ const StylistsList = props => {
    * Render featured stylists list
    */
   const renderStylist = ({item}) => {
-     return <RectButton onPress={() => navigation.navigate('stylistProfile', {stylistId: item.id})}
-                        style={[style.stylistBox]}
+     return <RectButton
+              onPress={() => navigation.navigate('stylistProfile', {stylistId: item.id})}
+              style={[style.stylistBox]}
             >
          <View style={{flex: .75}}>
           <FastImage 
-            source={item.avatar ? {uri: item.avatar} : require('../../assets/icons/default-avatar.png')} 
+            source={item.avatar ? {uri: item.avatar} : require('../../assets/icons/logo.png')} 
             style={{ height: 75, width: 75, marginEnd: 5, borderRadius: 35}} 
             resizeMode={'cover'} 
           />

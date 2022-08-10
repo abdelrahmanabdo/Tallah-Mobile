@@ -19,7 +19,9 @@ const Checkbox = ({...props}) => {
          justifyContent:'center',
          backgroundColor: isChecked ? '#D4AF37' : '#FFF',
          borderRadius:8,
-         marginHorizontal: 10
+         marginEnd: 10,
+         borderColor: '#DDD',
+         borderWidth: 1,
       },
       roundedContainer :{
          flexDirection:'column',
@@ -33,7 +35,7 @@ const Checkbox = ({...props}) => {
          justifyContent:'center',
          backgroundColor: isChecked ? '#D4AF37' : '#F8F8F8',
          borderRadius:14,
-         marginHorizontal: 10
+         marginHorizontal: 10,
       },
       value:{
          color : isChecked ? '#D4AF37' : '#000',
@@ -60,11 +62,13 @@ const Checkbox = ({...props}) => {
                       style={props.isRounded ? style.roundedContainer : style.container} >
             </Pressable>
             :
-             <RectButton onPress ={()=>{
-                                    setIsChecked(!isChecked);
-                                    props.onChange(!isChecked)
-                                 }}
-                         style={props.isRounded ? style.roundedContainer : style.container}>
+             <RectButton 
+              onPress ={()=>{
+                          setIsChecked(!isChecked);
+                          props.onChange(!isChecked)
+                        }}
+              style={props.isRounded ? style.roundedContainer : style.container}
+              >
              </RectButton>
       }
 

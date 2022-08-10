@@ -36,13 +36,21 @@ const QuotationCreateQuotation = ({ navigation, route})  => {
   const data = route.params.data;
   const [showModal, setShowModal] = useState(false);
   const [isAcceptTerms, setIsAcceptTerms] = useState(false);
+  const TAXES = 5;
+  const SUBTOTAL = 300;
+  const totalValue = SUBTOTAL + TAXES + Number(data?.fees);
 
   const placeQuotation = () => {
+    if (!isAcceptTerms) return;
     setShowModal(true);
   };
 
-
   const ThanksModal = () => {
+    const submitModal = () => {
+      setShowModal(false);
+      navigation.pop(2);
+    };
+
     return <Modal isVisible={showModal}
                     animationIn={'bounceIn'}
                     backdropOpacity={.7}>
@@ -63,7 +71,7 @@ const QuotationCreateQuotation = ({ navigation, route})  => {
             label={'Ok'}
             bgColor={'#D4AF37'}
             labelColor ={'#FFF'}
-            onPress={() => setShowModal(false)}
+            onPress={submitModal}
             style={ModalStyle.SecondaryButton}
           />
         </View>
@@ -73,7 +81,7 @@ const QuotationCreateQuotation = ({ navigation, route})  => {
   return  <SafeAreaView style={[GeneralStyle.container]}>
       <SafeAreaView style={[GeneralStyle.rowSpaceBetween, { marginBottom: 10 }]}>
         <RectButton 
-          style={{ flex: 1, marginHorizontal: 10, padding: 8, borderRadius: 4}}
+          style={{ marginHorizontal: 10, padding: 8, borderRadius: 4}}
           onPress={()=> navigation.goBack()}
         >
           <FastImage 
@@ -102,7 +110,7 @@ const QuotationCreateQuotation = ({ navigation, route})  => {
             {data?.sessionType}
           </Text>
         </View>
-               <View style={style.quotationRow}>
+        <View style={style.quotationRow}>
           <Text style={style.rowTitle}>
             Preferred Dates for the session
           </Text>
@@ -132,7 +140,7 @@ const QuotationCreateQuotation = ({ navigation, route})  => {
               Subtotal
             </Text>
             <Text style={style.priceValue}>
-              350 EGP
+              {SUBTOTAL} EGP
             </Text>
           </View>
           <View style={style.priceContainer}>
@@ -140,7 +148,7 @@ const QuotationCreateQuotation = ({ navigation, route})  => {
               Taxes
             </Text>
             <Text style={style.priceValue}>
-              5 EGP
+              {TAXES} EGP
             </Text>
           </View>
           <View style={style.priceContainer}>
@@ -157,15 +165,15 @@ const QuotationCreateQuotation = ({ navigation, route})  => {
             Total
           </Text>
           <Text style={style.totalValue}>
-            444 EGP
+            {totalValue} EGP
           </Text>
         </View>
-        <View style={{flexDirection:'row' , marginBottom: 30, marginStart: 15 , alignItems:'center'}}>
-          <Checkbox onChange={(value) => setIsAcceptTerms(value)}/>
+        <View style={{flexDirection:'row' , marginVertical: 30, alignItems:'center'}}>
+          <Checkbox onChange={(value) => setIsAcceptTerms(value)} />
           <RectButton
             onPress={()=> navigation.navigate('TAndC')} >
             <Text style={style.termsText}>
-                {I18n.t('agreeTermsAndConditions')} 
+              {I18n.t('agreeTermsAndConditions')} 
             </Text>
           </RectButton>
         </View>

@@ -88,6 +88,10 @@ const MoreTab = props => {
       </RectButton>
     };
 
+    useEffect(() => {
+      console.log({ stylist });
+    }, []);
+
     const logout = async () => {
       navigation.reset({
         index: 0,

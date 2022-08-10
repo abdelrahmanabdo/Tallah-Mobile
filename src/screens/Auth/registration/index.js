@@ -120,7 +120,7 @@ const Registeration = ({...props}) => {
                   placeholderColor={'#C3C3C3'} />
          </View>
          <View style={{ flex: .8, paddingVertica: 20 }}>
-            <View style={{flexDirection:'row' , marginBottom: 30, marginStart: 15 , alignItems:'center'}}>
+            <View style={{flexDirection:'row' , marginVertical: 15, marginStart: 25, alignItems:'center'}}>
                <Checkbox onChange={ (value) => setIsAcceptTerms(value)}/>
                <RectButton
                   onPress={()=> props.navigation.navigate('TAndC')} >
