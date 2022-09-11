@@ -65,7 +65,7 @@ const Notifications = props  => {
                 ? <NotFound text={'No Notifications!'}/>
                 :
                 notifications.map((item,index)=>{
-                    return  <Animatable.View  key={index} animation={'slideInRight'} >
+                    return <Animatable.View  key={index} animation={'slideInRight'} useNativeDriver={true}>
                     <RectButton  style={[style.notificationContainer,{ backgroundColor: item.isRead ? '#D4AF37' : '#FFF'}]}>
                       <FastImage  source={require('../assets/images/girl.png')}
                                   resizeMode={'contain'}

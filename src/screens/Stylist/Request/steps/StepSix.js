@@ -8,6 +8,7 @@ import {
 import FastImage from 'react-native-fast-image';
 import Modal from 'react-native-modal';
 import { useSelector } from 'react-redux';
+import { BorderlessButton } from 'react-native-gesture-handler';
 
 //Styles
 import GeneralStyle from '../../../../assets/styles/GeneralStyle';
@@ -23,7 +24,6 @@ import TAndC from '../../../../modals/TAndC';
 //Apis
 import api from '../../../../config/api';
 import endpoints from '../../../../config/endpoints';
-import { BorderlessButton } from 'react-native-gesture-handler';
 
 const StepSix = ({ navigation }) => {
    const stylist = useSelector(state => state.stylist);
@@ -117,82 +117,10 @@ const StepSix = ({ navigation }) => {
 
    return <KeyboardAvoidingView style={{height : '90%'}}>
       <ScrollView style={[{padding:15}]}>
-        <Text
-          style={[GeneralStyle.blackBoldText , 
-                {fontSize : 18 , color : '#353535'}]}
-        >
+        <Text style={[GeneralStyle.blackBoldText , 
+                {fontSize : 18 , color : '#353535'}]}>
         Add bank account details
         </Text>
-        {/* <View
-            style={style.creditCardBg}
-         >
-            <FastImage 
-               source={require('../../../../assets/images/visa-logo.png')}
-               style={{width : 80 , height : 60}}
-               resizeMode="contain"
-            />
-            <View
-               style={{marginVertical : 25}}
-            >
-               <Text
-                  style={{color : '#D1988F' , fontSize : 12 , marginBottom : 10} }
-               >
-                  CARD NUMBER
-               </Text>
-               <Text
-                  style={{color :'#BDC6CC' , fontSize : 23 , letterSpacing : 6}}
-               >
-                  {card.cardNumber || '**** **** **** 0000'}
-               </Text>
-            </View>
-            <View
-               style={[GeneralStyle.rowSpaceBetween , {width :'95%'}]}
-            >
-               <View
-                  style={{flex:6 , marginEnd : 10}}
-               >
-                  <Text
-                     style={{color : '#D1988F' , fontSize : 12  , marginBottom : 10} }
-                  >
-                     HOLDER 
-                  </Text>
-                  <Text
-                     style={{color :'#000' , fontSize : 14}}
-                  >
-                     {card.holderName || 'XXXXXXX'}
-                  </Text>
-               </View>
-               <View
-                  style={{flex:2, marginEnd : 20}}
-               >
-                  <Text
-                     style={{flex:1 , color : '#D1988F' , fontSize : 12 , marginBottom : 10} }
-                  >
-                     EXP
-                  </Text>
-                  <Text
-                     style={{color :'#000' , fontSize : 14}}
-                  >
-                     {card.expiryDate || 'XX/XX'}
-                  </Text>
-               </View>
-               <View
-                  style={{flex:1}}
-               >
-                  <Text
-                     style={{flex:1 , color : '#D1988F' , fontSize : 12 , marginBottom : 10} }
-                  >
-                     CVV
-                  </Text>
-                  <Text
-                     style={{color :'#000' , fontSize : 14 }}
-                  >
-                     { card.cvv || 'XXX'}
-                  </Text>
-               </View>
-            </View>
-         </View> */}
-
           <Input
             name={'Account Owner Name'}
             color={'#000'}

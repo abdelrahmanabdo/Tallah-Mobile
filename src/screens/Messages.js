@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, ImageBackground , ScrollView, I18nManager, SafeAreaView } from 'react-native';
+import { Text, View , ScrollView, I18nManager, SafeAreaView, ActivityIndicator } from 'react-native';
 import { useSelector } from 'react-redux';
 import FastImage from 'react-native-fast-image';
 import { BorderlessButton, RectButton, TextInput } from 'react-native-gesture-handler';
@@ -14,19 +14,26 @@ import Snackbar from '../components/Snackbar';
 import api from '../config/api';
 import endpoints from '../config/endpoints';
 
+import { UserType } from '../enums';
+import NotFound from '../components/NotFound';
+
 const Messages = props => {
   const user = useSelector(state => state.user);
   const stylist = useSelector(state => state.stylist);
-  const [chats , setChats ] = useState([]);
+  const [chats , setChats] = useState([]);
+  const [searchResult, setSearchResult] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
 
    /**
     * Get user chats
     */
   const getChats = async() => {
-    const currentUserType = user.activeUserType;
-    const apiParams = currentUserType === 'user'
+    setIsLoading(true);
+    const apiParams = user.activeUserType === UserType.User
       ? `?user_id=${user.account.id}` 
       : `?stylist_id=${stylist.profile.id}`;
+
     await api
           .get(`${endpoints.chats}${apiParams}`)
           .then(res => {
@@ -37,7 +44,26 @@ const Messages = props => {
               text: I18n.t('unknownError'),
               type: 'danger'
             });
-          });
+          })
+          .finally(() => setIsLoading(false));
+  };
+
+  /**
+   * Search in chats list
+   * 
+   * @param {String} query
+   * @returns 
+   */
+  const searchInChats = (query) => {
+    let result = [];
+    if (query.length > 0) {
+      result = chats.filter((chat) => (
+        chat.user.name.toUpperCase().includes(query.toUpperCase())
+      ));
+    } else {
+      result = chats;
+    }
+    return setSearchResult(result);
   };
 
   useEffect(() => {
@@ -65,7 +91,7 @@ const Messages = props => {
             />
           </RectButton>
           <Text style={GeneralStyle.headerText}>
-              Messages
+            Messages
           </Text>
           <View>
             <BorderlessButton onPress={() => props.navigation.navigate('notifications')}>
@@ -77,64 +103,68 @@ const Messages = props => {
           </View>
         </View>
       </View>
-      <View style={[style.searchContainer]} >
+      {/* <View style={[style.searchContainer]} >
         <FastImage 
-            source={require('../assets/icons/search-icon.png')}
-            style={{width : 20 , height:  20 , marginEnd : 15}}
-            resizeMode={'contain'}
+          source={require('../assets/icons/search-icon.png')}
+          style={{width : 20 , height:  20 , marginEnd : 15}}
+          resizeMode={'contain'}
         />
         <TextInput 
-            placeholder={'SEARCH'}
-            style={{flex:1 , padding : 4 , color : '#000'}}
-            placeholderTextColor={'#CCC'}   
+          placeholder={'SEARCH'}
+          style={{flex:1 , padding : 4 , color : '#000'}}
+          placeholderTextColor={'#CCC'}
+          onChangeText={searchInChats}
         />
-      </View>
+      </View> */}
       <ScrollView>
         {
-          chats.map((item, index) => {
-              return  <Animatable.View key={index} animation={'slideInRight'}>
-              <RectButton 
-                  onPress={() => props.navigation.navigate('chat', {
-                    chatId: item.id,
-                  })}
-                  style={[style.chatContainer,
-                          {backgroundColor: item.isRead ? '#D4AF37' : '#FFF'}]}
-              >
-                <FastImage source={
-                  (item.stylist && item.stylist.avatar) 
-                    ? {
-                      uri: user.activeUserType === 'user'
-                          ? item.stylist.avatar
-                          : item.user.profile.avatar
-                    }
-                    : require('../assets/images/logo.png')
-                    
-                  }
-                  resizeMode={'cover'}
-                  style={{
-                    width: 60, height: 60, 
-                    alignSelf:'center', justifyContent:'center',
-                    borderRadius: 30, marginEnd: 10
-                  }} 
-                />
-                <View style={style.chatDetailsContainer}>
-                    <View style={{flexDirection: 'row', justifyContent:'space-between',alignItems:'center' , marginBottom : 4}}>
-                        <Text style={[GeneralStyle.blackBoldText,{fontSize : 16}]}>
+          isLoading
+            ? <ActivityIndicator color="#D4AF37" />
+            : chats.length > 0
+              ? chats.map((item, index) => {
+                  return  <Animatable.View key={index} animation={'slideInRight'} useNativeDriver={true}>
+                    <RectButton 
+                        onPress={() => props.navigation.navigate('chat', {
+                          chatId: item.id,
+                        })}
+                        style={[style.chatContainer, {backgroundColor: item.isRead ? '#D4AF37' : '#FFF'}]}
+                    >
+                      <FastImage source={
+                        (item.stylist && item.stylist.avatar) 
+                          ? {
+                            uri: user.activeUserType === UserType.User
+                                ? item.stylist.avatar
+                                : item.user.profile.avatar
+                          }
+                          : require('../assets/images/logo.png')
+                          
+                        }
+                        resizeMode={'cover'}
+                        style={{
+                          width: 60, height: 60, 
+                          alignSelf:'center', justifyContent:'center',
+                          borderRadius: 30, marginEnd: 10
+                        }} 
+                      />
+                      <View style={style.chatDetailsContainer}>
+                        <View style={{flexDirection: 'row', justifyContent:'space-between',alignItems:'center' , marginBottom : 4}}>
+                          <Text style={[GeneralStyle.blackBoldText,{fontSize : 16}]}>
                             {
-                              user.activeUserType === 'user'
+                              user.activeUserType === UserType.User
                                 ? item.stylist ? item.stylist.user.name : 'Not provided'
                                 : item.user.name
                             }
+                          </Text>
+                        </View>
+                        <Text style={{color : '#2196F3' , fontSize : 12}}>
+                          {item.user.is_online ? 'Online' : 'Offline'}
                         </Text>
-                    </View>
-                    <Text style={{color : '#2196F3' , fontSize : 12}}>
-                        {item.user.online ? 'Online' : 'Offline'}
-                    </Text>
-                </View>
-              </RectButton>
-            </Animatable.View>
-          })
-        }
+                      </View>
+                    </RectButton>
+                  </Animatable.View>
+                 })
+                : <NotFound text={'No Messages!'}/>
+          }
       </ScrollView>
     </SafeAreaView>
 };

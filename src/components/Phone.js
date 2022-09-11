@@ -48,7 +48,11 @@ const Phone = ({ ...props }) => {
       setShowCountryPicker(true);
     };
 
-   return <Animatable.View animation={'pulse'} style={[Style.container, props.style]}>
+   return <Animatable.View 
+      animation={'pulse'}
+      style={[Style.container, props.style]}
+      useNativeDriver={true}
+    >
       <View style={{flexDirection:'row',alignItems:'center'}}>
         { props.name &&
           <Text style={[Style.title,{fontWeight : '700'}]}>

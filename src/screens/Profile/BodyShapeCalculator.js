@@ -90,7 +90,7 @@ const BodyShapeCalculator = ({...props}) => {
         bodyShape = 'Rectangle';
       }
 
-      setModalText('Your body Shap is');
+      setModalText('Your body Shape is');
       setModalSubText(bodyShape);
 
       if(bodyShape == 'Round'){

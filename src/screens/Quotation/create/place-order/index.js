@@ -4,7 +4,6 @@ import {
   View,
   I18nManager,
   SafeAreaView,
-  Dimensions,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useSelector } from 'react-redux';
@@ -25,24 +24,40 @@ import Checkbox from '../../../../components/Checkbox';
 //Apis
 import api from '../../../../config/api';
 import endpoints from '../../../../config/endpoints';
-import Input from '../../../../components/Input';
 
-
-const {width , height} = Dimensions.get('screen');
-
-const QuotationCreateQuotation = ({ navigation, route})  => {
+const CreateQuotation = ({ navigation, route})  => {
   const user = useSelector(state => state.user);
   const stylist = useSelector(state => state.stylist);
   const data = route.params.data;
   const [showModal, setShowModal] = useState(false);
   const [isAcceptTerms, setIsAcceptTerms] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const TAXES = 5;
-  const SUBTOTAL = 300;
-  const totalValue = SUBTOTAL + TAXES + Number(data?.fees);
+  const totalValue = TAXES + Number(data?.fees);
 
-  const placeQuotation = () => {
+  const placeQuotation = async () => {
     if (!isAcceptTerms) return;
-    setShowModal(true);
+
+    setIsLoading(true);
+    const requestData = {
+      stylist_id: stylist.profile.id,
+      user_id: data.userId,
+      session_type_id: data.sessionTypeId,
+      fees: Number(data.fees),
+      date: data.date,
+      time: `${data.from} - ${data.to}`,
+      total_paid: totalValue,
+    };
+    console.log({ requestData });
+    await api
+      .post(`${endpoints.quotations}`, requestData)
+      .then(res => {
+        setShowModal(true);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   const ThanksModal = () => {
@@ -76,7 +91,7 @@ const QuotationCreateQuotation = ({ navigation, route})  => {
           />
         </View>
     </Modal>
-  }
+  };
 
   return  <SafeAreaView style={[GeneralStyle.container]}>
       <SafeAreaView style={[GeneralStyle.rowSpaceBetween, { marginBottom: 10 }]}>
@@ -107,7 +122,7 @@ const QuotationCreateQuotation = ({ navigation, route})  => {
             Session Type
           </Text>
           <Text style={style.rowValue}>
-            {data?.sessionType}
+            {data?.sessionTitle}
           </Text>
         </View>
         <View style={style.quotationRow}>
@@ -135,14 +150,6 @@ const QuotationCreateQuotation = ({ navigation, route})  => {
           </Text>
         </View>
         <View style={style.quotationInfo}>
-          <View style={style.priceContainer}>
-            <Text style={style.priceTitle}>
-              Subtotal
-            </Text>
-            <Text style={style.priceValue}>
-              {SUBTOTAL} EGP
-            </Text>
-          </View>
           <View style={style.priceContainer}>
             <Text style={style.priceTitle}>
               Taxes
@@ -185,10 +192,11 @@ const QuotationCreateQuotation = ({ navigation, route})  => {
           style={{ flex: 1 }}
           bgColor={'#D4AF37'}
           labelColor ={'#FFF'}
+          isLoading={isLoading}
         />
       </View>
       <ThanksModal />
   </SafeAreaView>
 }
  
-export default QuotationCreateQuotation;
+export default CreateQuotation;

@@ -1,10 +1,5 @@
 import React from 'react';
 import { Text, View ,TextInput ,  StyleSheet , Dimensions, I18nManager} from 'react-native';
-import {
-  TextArea,
-  Box,
-  NativeBaseProvider
-} from 'native-base';
 import * as Animatable from 'react-native-animatable';
 
 const {width , height} = Dimensions.get('window');
@@ -47,36 +42,40 @@ const Input = ({ ...props }) => {
    });
 
 
-   return <Animatable.View animation={'pulse'} style={[Style.container, props.style]}>
-        <View style={{ flexDirection:'row',alignItems:'center', marginBottom: 8, }}>
-          {
-            props.required &&
-            <Text style={Style.required}>*</Text>
-          }
-          {
-            props.name &&
-            <Text style={[Style.title,{fontWeight : '700'}]}>
-                {props.name}
-            </Text>                     
-          }
-        </View>
-        <TextInput
-          multiline={props.isTextarea}
-          numberOfLines={props.rowsCount || 7}
-          autoFocus={props.autoFocus}
-          onChangeText={props.onChangeText}
-          placeholder={props.placeholderText}
-          defaultValue={props.defaultValue}
-          value={props.value}
-          style={[Style.input , props.style, { 
-            height: props.isTextarea ? 150 : 45,
-          }]}
-          placeholderTextColor={props.placeholderColor}
-          secureTextEntry={props.password}
-          returnKeyType={'done'}
-          keyboardType={props.isNumeric ? 'number-pad' : props.isEmail ? 'email-address': 'default'}
-        />
-    </Animatable.View>
+   return <Animatable.View
+          animation={'pulse'}
+          style={[Style.container, props.style]}
+          useNativeDriver={true}
+        >
+      <View style={{ flexDirection:'row',alignItems:'center', marginBottom: 8, }}>
+        {
+          props.required &&
+          <Text style={Style.required}>*</Text>
+        }
+        {
+          props.name &&
+          <Text style={[Style.title,{fontWeight : '700'}]}>
+              {props.name}
+          </Text>                     
+        }
+      </View>
+      <TextInput
+        multiline={props.isTextarea}
+        numberOfLines={props.rowsCount || 7}
+        autoFocus={props.autoFocus}
+        onChangeText={props.onChangeText}
+        placeholder={props.placeholderText}
+        defaultValue={props.defaultValue}
+        value={props.value}
+        style={[Style.input , props.style, { 
+          height: props.isTextarea ? 150 : 45,
+        }]}
+        placeholderTextColor={props.placeholderColor}
+        secureTextEntry={props.password}
+        returnKeyType={'done'}
+        keyboardType={props.isNumeric ? 'number-pad' : props.isEmail ? 'email-address': 'default'}
+      />
+  </Animatable.View>
     
 };
 

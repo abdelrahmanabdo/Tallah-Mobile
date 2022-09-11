@@ -57,7 +57,7 @@ const Onboarding = ({...props}) => {
   return <View style={style.container}>
        <StatusBar backgroundColor="transparent" translucent barStyle='dark-content' />
         <View style={{flex: 1.3}} >
-          <Animatable.View animation="slideInRight" duration={1600}>
+          <Animatable.View animation="slideInRight" duration={1600} useNativeDriver={true}>
             <FastImage
               source={screens[activeScreen].image}
               style={style.onboardingImage}
@@ -91,9 +91,12 @@ const Onboarding = ({...props}) => {
           </View>
         </View>
         <View style={{flex: .65}} >
-          <Animatable.View animation="bounceIn" 
-                            duration={1500} 
-                            style={style.textContainer}>
+          <Animatable.View 
+            animation="bounceIn" 
+            duration={1500} 
+            style={style.textContainer}
+            useNativeDriver={true}
+          >
               <Text style={style.largeText}>
                   {
                     screens[activeScreen].title

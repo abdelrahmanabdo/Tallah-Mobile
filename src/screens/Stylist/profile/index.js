@@ -25,6 +25,7 @@ const StylistProfile = ({...props}) => {
   const user = useSelector(state => state.user);
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
 
    /**
    * Get current stylist data
@@ -54,7 +55,7 @@ const StylistProfile = ({...props}) => {
    };
 
    /**
-    * Protfolio tabs 
+    * Specializations tabs 
     */
    const SpecializationTabs = () => {
       const [activeTab , setActiveTab ] = useState(0);
@@ -64,6 +65,24 @@ const StylistProfile = ({...props}) => {
          setActiveTab(item.id);
          setActiveSpecialzation(item);
       }
+
+      const askForPackage = async () => {
+        setIsButtonLoading(true);
+        const userChats = await api.get(`${endpoints.chats}?user_id=${user.account?.id}`);
+        console.log(userChats.data)
+        const chat = userChats.data.data.find((chat) => (
+          chat.user_id == user.account?.id && chat.stylist_id == data.id
+        ));
+        
+        setIsButtonLoading(false);
+        props.navigation.navigate(!user.isLoggedIn ? 'login' : 'chat', {
+          stylist: {
+            ...data,
+            name: data.user.name,
+            chatId: chat ? chat.id : null,
+          }
+        })
+      };
 
       return <View>
           <FlatList 
@@ -110,7 +129,8 @@ const StylistProfile = ({...props}) => {
               label={'Ask for packages'}
               labelColor={'#FFF'}
               style={{width : '100%',padding : 13 , marginVertical : 0 ,marginTop : 10}}
-              onPress={() => props.navigation.navigate(!user.isLoggedIn ? 'login' : 'chat', { stylist: { ...data, name: data.user.name }}) }
+              isLoading={isButtonLoading}
+              onPress={askForPackage}
             />
           </View>
       </View>

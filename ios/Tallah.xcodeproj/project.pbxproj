@@ -587,7 +587,7 @@
 				CODE_SIGN_ENTITLEMENTS = Tallah/Tallah.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = XTVS6AC6R6;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Tallah/Info.plist;
@@ -620,7 +620,7 @@
 				CODE_SIGN_ENTITLEMENTS = Tallah/Tallah.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = XTVS6AC6R6;
 				INFOPLIST_FILE = Tallah/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -24,7 +24,6 @@ const StylistsList = props => {
   const stylist = useSelector(state => state.stylist);
   const [stylists , setStylists ] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
-  const [featuredStylists, setFeaturedStylists] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
 
@@ -42,21 +41,6 @@ const StylistsList = props => {
         setIsLoading(false);
       })
       .catch(err => setIsLoading(false));
-  };
-
-  /**
-   * Render featured stylists list
-   */
-  const renderFeaturedStylist = ({item}) => {
-     return <RectButton onPress={()=> {}}
-                        style={{ width: width*.19, marginHorizontal: 5 }}>
-         <FastImage source={require('../../assets/icons/default-avatar.png')} 
-                  style={{width : 55 , height : 55 , borderRadius : 18}} />
-         <Text style={[GeneralStyle.blackText,{marginTop : 5}]} 
-               numberOfLines={2}>
-            {item.name}
-         </Text>
-     </RectButton>
   };
 
   /**
@@ -182,21 +166,7 @@ const StylistsList = props => {
             renderItem={renderStylist}
          />
       }
-      {/* <View style={[style.grayContainer]}>
-         <Text style={[GeneralStyle.primaryText , {textAlign :'center',fontSize:18,fontWeight : '500'}]}>
-            Highest rating
-         </Text>
-         <FlatList 
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={featuredStylists}
-            style={{backgroundColor: '#F8F8F8', paddingVertical : 10}}
-            keyExtractor={(item,index) => index.toString()}
-            renderItem={renderFeaturedStylist}
-         />
-      </View> */}
   </View>
-
-
 }
+
 export default StylistsList;

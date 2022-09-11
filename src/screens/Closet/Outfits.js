@@ -55,11 +55,11 @@ const Outfits = props  => {
     getOutfits();
 
     // Subscribe for the focus Listener
-    props.navigation.addListener('focus', () => {
+    const unsubscribe = props.navigation.addListener('focus', () => {
       getOutfits();
     });
 
-    return () => props.navigation.removeListener();
+    return unsubscribe;
   }, []);
 
   return  <SafeAreaView style={[GeneralStyle.container]}>

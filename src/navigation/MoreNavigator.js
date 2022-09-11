@@ -19,9 +19,8 @@ import Support from '../screens/Support';
 import WelcomeIntro from '../screens/Stylist/Request/WelcomeIntro';
 import PhoneConfirmation from '../screens/Stylist/Request/PhoneConfirmation';
 import StylistRequestSteps from '../screens/Stylist/Request/StylistRequestSteps';
-import Chat from '../screens/Chat/Chat';
-import Call from '../screens/Chat/Call/Details';
-import Answer from '../screens/Chat/Call/Answer';
+import Chat from '../screens/Chat';
+import Session from '../screens/Chat/Session';
 import Outfits from '../screens/Closet/Outfits';
 import OutfitItemView from '../screens/Closet/OutfitItemView';
 import ClosetTab from '../screens/Tabs/ClosetTab';
@@ -88,12 +87,9 @@ export function MoreNavigator () {
          <Stack.Screen name="chat" 
                        component={Chat}
                        /> 
-         <Stack.Screen name="AnswerCall" 
-                       component={Answer}
+         <Stack.Screen name="Session" 
+                       component={Session}
                        />    
-         <Stack.Screen name="CallDetails" 
-                       component={Call}
-                       />                                              
          <Stack.Screen name="calendar" 
                        component={Calendars}
                        />

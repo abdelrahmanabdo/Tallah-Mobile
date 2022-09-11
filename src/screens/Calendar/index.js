@@ -30,6 +30,7 @@ const Calendars = props  => {
    */
   const getUserCalendar = () => {
     if (!user.account.id) return;
+
     api.get(endpoints.calendar + '/' + user.account.id)
       .then((res) => {
         setIsLoading(false);
@@ -45,7 +46,7 @@ const Calendars = props  => {
     calendars.forEach((calendar) => {
       userCalendar[calendar.date] = {
         selected: true,
-        selectedColor: calendar.type === 'outfit'
+        selectedColor: ['outfit', 'item'].includes(calendar.type) 
           ? '#D4AF37'
           : '#DE4C69',
       };
@@ -172,24 +173,19 @@ const Calendars = props  => {
                         {moment(calendar.date).format('DD MMMM YYYY')}
                       </Text>
                     </View>
-                    {/* <View style={{flex:1,flexDirection : 'row',justifyContent:'space-between',
-                                    justifyContent:'center',alignItems:'center'}}>
-                      <View style={{padding : 8, borderRadius : 4,backgroundColor: '#012647',}}>
-                      </View> */}
-                      <BorderlessButton 
-                        onPress = {
-                          () => props.navigation.navigate('addCalendar', {
-                            event: calendar
-                          })
-                        }
-                        style={{ marginEnd: 25 }}
-                      >
-                          <FastImage
-                            source={require('../../assets/icons/arrow-bg.png')}
-                            style={{width : 55,height : 55}}
-                          />
-                      </BorderlessButton>
-                    {/* </View> */}
+                    <BorderlessButton 
+                      onPress = {
+                        () => props.navigation.navigate('addCalendar', {
+                          event: calendar
+                        })
+                      }
+                      style={{ marginEnd: 25 }}
+                    >
+                      <FastImage
+                        source={require('../../assets/icons/arrow-bg.png')}
+                        style={{width : 55,height : 55}}
+                      />
+                    </BorderlessButton>
                   </View>
                 </View>
               ))

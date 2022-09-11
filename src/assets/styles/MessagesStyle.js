@@ -52,20 +52,27 @@ export default  style = StyleSheet.create({
     flexDirection : 'row',
     alignItems: 'center',
     borderBottomColor : '#Ccc',
-    padding: 20,
+    padding: 17,
   },
   messageContainer : {
     paddingHorizontal: 10,
-    marginTop : 8,
+    marginTop: 8,
     flexDirection : 'row',
     justifyContent: 'center',
   },
   messageDetailsContainer :{
-    padding: 10,
-    borderRadius : 8 ,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius : 6,
     justifyContent: 'center',
     alignItems: 'center',
     margin : 6,
+  },
+  messageText: {
+    color: '#FFF',
+    fontSize: 16,
+    lineHeight: 24,
+    maxWidth: width * .65,
   },
   actionsContainer :{
     backgroundColor: '#012647',
@@ -73,5 +80,38 @@ export default  style = StyleSheet.create({
     flexDirection : 'row',
     justifyContent:'flex-start',
     alignItems:'center'
+  },
+  quotationBoxContainer: {
+  },
+  quotationMessage: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    lineHeight: 24
+  },
+  footerContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  AcceptQuotationButton: {
+    backgroundColor: 'green',
+    padding: 8,
+    paddingHorizontal: 15,
+    borderRadius: 5
+  },
+  RejectQuotationButton: {
+    backgroundColor: '#C21010',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 5
+  },
+  QuotationText: {
+    color: "#FFF",
+  },
+  confirmedQuotationMessage: {
+    marginVertical: 10,
+    color: '#079',
   }
 });

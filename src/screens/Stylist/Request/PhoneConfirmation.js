@@ -141,7 +141,7 @@ const PhoneConfirmation = props => {
         </Text>
       </SafeAreaView>
       <View style={[ { padding : 20}] }>
-         <Animatable.View animation={'bounceIn'}>
+         <Animatable.View animation={'bounceIn'} useNativeDriver={true}>
             <FastImage 
                source={require('../../../assets/icons/logo.png')} 
                style={{width : 130 , height : 130 , alignSelf:'center', marginBottom : 25}}
@@ -150,7 +150,7 @@ const PhoneConfirmation = props => {
          </Animatable.View>
          {
             activeStep == 1 ?
-            <Animatable.View animation={'slideInRight'}>
+            <Animatable.View animation={'slideInRight'} useNativeDriver={true}>
                <Text style={[GeneralStyle.blackText, {
                  fontWeight: '300', textAlign: 'center', lineHeight: 22, fontSize: 15
                }]}>
@@ -178,7 +178,7 @@ const PhoneConfirmation = props => {
                />
             </Animatable.View>
             :
-            <Animatable.View animation={'slideInLeft'}>
+            <Animatable.View animation={'slideInLeft'} useNativeDriver={true}>
                <Text style={[GeneralStyle.blackText, {
                   fontWeight: '300', textAlign: 'center', lineHeight: 22, fontSize: 15
                 }]}

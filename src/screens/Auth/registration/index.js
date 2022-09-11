@@ -69,7 +69,6 @@ const Registeration = ({...props}) => {
             await AsyncStorage.setItem('account' , JSON.stringify(res.data.user));
             await AsyncStorage.setItem('activeUserType', JSON.stringify('user'));
             setIsSubmitting(false);
-            await new Snackbar({text : I18n.t('registeredSuccessfully'), type : 'success'});
             props.navigation.navigate('createProfile');
           })
           .catch(error => {

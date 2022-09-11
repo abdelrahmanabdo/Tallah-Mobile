@@ -1,5 +1,5 @@
 import React, { useEffect , useState } from 'react';
-import { Text, View, ImageBackground , FlatList , Pressable, I18nManager, SafeAreaView } from 'react-native';
+import { Text, View, ImageBackground , FlatList , Pressable, I18nManager, SafeAreaView, ActivityIndicator } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { BorderlessButton, RectButton, ScrollView,  } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
@@ -29,6 +29,7 @@ const Favourites = props  => {
   const user = useSelector(state => state.user);
   const [showFilterModal , setShowFilterModal ] = useState(false);
   const [data , setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   /**
@@ -47,12 +48,14 @@ const Favourites = props  => {
    * Get favorites
    */
    const getFavorites = () => {
+    setIsLoading(true);
       api.get(endpoints.favourites + '?user_id=' + user.account.id)
-         .then(res => setData(res.data.data));
+         .then(res => setData(res.data.data))
+         .catch((err) => console.log(err.response))
+         .finally(() => setIsLoading(false));
    };
 
   useEffect(() => getFavorites(), []);
-
 
   /**
     * Filter Modal
@@ -72,38 +75,36 @@ const Favourites = props  => {
        * Get gifts
        */
       const getCategories = () => {
-          api  
-              .get(endpoints.categories)
+          api.get(endpoints.categories)
               .then(res => setCategories(res.data.data));
-      }
+      };
 
       /**
        * Get Colors
        */
       const getColors = () => {
-          api  
-              .get(endpoints.colors)
+          api .get(endpoints.colors)
               .then(res => setColors(res.data.data));
-      }
+      };
 
       /**
        * Get Brands
        */
       const getBrands = () => {
-          api.get(endpoints.brands)
+        api.get(endpoints.brands)
               .then(res => setBrands(res.data.data));
       };
 
       useEffect(() =>{
-          getCategories();
-          getColors();
-          getBrands();
+        getCategories();
+        getColors();
+        getBrands();
       }, [season]);
 
       return <Modal  
-                    isVisible={showFilterModal}
-                    style={{margin: 0,justifyContent:'flex-end'}}
-                    backdropOpacity={.7}>
+            isVisible={showFilterModal}
+            style={{margin: 0,justifyContent:'flex-end'}}
+            backdropOpacity={.7}>
         <View style={ModalStyle.actionModalContainer}>
           <View style={ModalStyle.actionModalHeader}>
               <View></View>
@@ -202,29 +203,32 @@ const Favourites = props  => {
               Favourites
           </Text>
           <View style={{flexDirection : 'row'}}>
-              <BorderlessButton onPress={() => {setShowFilterModal(true)}}>
-                  <FastImage source={require('../assets/icons/filter.png')}
-                          style={{width : 25,height : 25}} />
-              </BorderlessButton>
+            {/* <BorderlessButton onPress={() => {setShowFilterModal(true)}}>
+                <FastImage source={require('../assets/icons/filter.png')}
+                        style={{width : 25,height : 25}} />
+            </BorderlessButton> */}
           </View>
         </View>
     </View>
     {
-      data.length === 0 ?
-      <NotFound
-        text={'No items found in favorites'}
-        isFavourites
-      />
+      isLoading
+      ? <ActivityIndicator color="#D4AF37" /> 
       :
-      <FlatList 
-          contentContainerStyle={[style.favoruitesListContainer]}
-          showsVerticalScrollIndicator={false}
-          horizontal = {false}
-          keyExtractor={(item,index) => index.toString()}
-          numColumns={3}
-          data={data}
-          renderItem={renderItem}
-      />
+        !data.length
+        ? <NotFound
+          text={'No items found in favorites'}
+          isFavourites
+        />
+        :
+        <FlatList 
+            contentContainerStyle={[style.favoruitesListContainer]}
+            showsVerticalScrollIndicator={false}
+            horizontal = {false}
+            keyExtractor={(item,index) => index.toString()}
+            numColumns={3}
+            data={data}
+            renderItem={renderItem}
+        />
     }
     {  
       showFilterModal &&

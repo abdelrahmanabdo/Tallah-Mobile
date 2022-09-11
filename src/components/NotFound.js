@@ -9,8 +9,9 @@ const NotFound = ({image, text, isFavourites}) => {
 
     return (
     <Animatable.View 
-        animation={'bounceIn'}
-        style={{flex: 1, justifyContent: 'center', alignItems:'center'}}
+      animation={'bounceIn'}
+      style={{flex: 1, justifyContent: 'center', alignItems:'center'}}
+      useNativeDriver={true}
     > 
         <FastImage 
             source={image ? {uri: image} 

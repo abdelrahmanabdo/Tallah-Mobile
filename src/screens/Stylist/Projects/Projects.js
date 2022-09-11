@@ -91,11 +91,11 @@ const Projects = props => {
    useEffect(() => {
       getStylistProjects();
       // Subscribe for the focus Listener
-      props.navigation.addListener('focus', () => {
+      const unsubscribe = props.navigation.addListener('focus', () => {
         getStylistProjects();
       });
 
-      return () => props.navigation.removeListener();
+      return unsubscribe;
    }, []);
 
    return <View style={[GeneralStyle.container]}>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, ImageBackground, SafeAreaView ,FlatList,ScrollView, Image, Platform } from 'react-native';
-import { Button } from 'native-base';
-import { BaseButton, BorderlessButton, RectButton, TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, View, SafeAreaView ,FlatList,ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import { BorderlessButton, TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import FastImage from 'react-native-fast-image';
 import * as ImagePicker from "react-native-image-picker";
@@ -27,13 +27,13 @@ import {
   updateProfile,
   changeCompletedProfileStatus
 } from '../../redux/actions/user';
-import AsyncStorage from '@react-native-community/async-storage';
+import { BodyShape } from '../../enums';
 
 
 const CreateProfile = ({...props}) => {
    const user = useSelector(state => state.user);
    const dispatch = useDispatch();
-   const [ activeStep, setActiveStep ] = useState(props.activeStep ?? 1);
+   const [ activeStep, setActiveStep ] = useState(props.route?.params?.activeStep ?? 1);
    const [ showModal, setShowModal ] = useState(false);
    const [ modalText, setModalText ] = useState('');
 
@@ -266,32 +266,32 @@ const CreateProfile = ({...props}) => {
       const [ firstStepChoices ] = useState([
         { 
           id: 1,
-          title: 'Rectangle',
+          title: BodyShape.Rectangle,
           image: require('../../assets/images/rectangle-shape.png'),
         },
         {
           id: 2,
-          title: 'Triangle',
+          title: BodyShape.Triangle,
           image: require('../../assets/images/triangle-shape.png'),
         },
         {
           id: 3,
-          title: 'Inverted Triangle',
+          title: BodyShape.InvertedTriangle,
           image: require('../../assets/images/inverted-triangle-shape.png'),
         },
         {
           id: 4,
-          title: 'Round',
+          title: BodyShape.Round,
           image: require('../../assets/images/round-shape.png'),
         },
         {
           id: 5,
-          title: 'Hourglass',
+          title: BodyShape.Hourglass,
           image: require('../../assets/images/hourglass-shape.png'),
         },
         {
           id: 6,
-          title: 'Not Sure',
+          title: BodyShape.NotSure,
           image: require('../../assets/images/not-sure-shape.png'),
         },
       ]);
@@ -300,8 +300,10 @@ const CreateProfile = ({...props}) => {
        * Get Body shape choices
        */
       const getBodyShapeChoices = async () => {
-         await api.get(endpoints.registrationChoices + '?type=body_shape')    
-                  .then(res => setData(res.data.data));
+        setIsLoading(true);
+        await api.get(endpoints.registrationChoices + '?type=body_shape')    
+                  .then(res => setData(res.data.data))
+                  .finally(() => setIsLoading(false));
       }
 
       const RenderItem = (item, index) => {
@@ -322,24 +324,25 @@ const CreateProfile = ({...props}) => {
            text: I18n.t('shouldSelectOneAtLeast'),
            type: 'danger'
         });
+
         const bodyShape = firstStepChoices[selected - 1].title;
-        if (bodyShape == 'Rectangle') {
+        if (bodyShape == BodyShape.Rectangle) {
           setModalSubText('Captivating');
           setModalImage(require('../../assets/images/captivating.png'));
         }
-        if (bodyShape == 'Triangle') {
+        if (bodyShape == BodyShape.Triangle) {
           setModalSubText('Hottie');
           setModalImage(require('../../assets/images/hottie.png'));
         }
-        if (bodyShape == 'Inverted Triangle') {
+        if (bodyShape == BodyShape.InvertedTriangle) {
           setModalSubText('Charming');
           setModalImage(require('../../assets/images/charming.png'));
         }
-        if (bodyShape == 'Round') {
+        if (bodyShape == BodyShape.Round) {
           setModalSubText('Attractive');
           setModalImage(require('../../assets/images/attractive.png'));
         }
-        if (bodyShape == 'Hourglass') {
+        if (bodyShape == BodyShape.Hourglass) {
           setModalSubText('Glamourous');
           setModalImage(require('../../assets/images/glamorous.png'));
         }
@@ -350,16 +353,23 @@ const CreateProfile = ({...props}) => {
        * Submit current step handler
        */
       const submitStep = () => {
-         if (!selected) return new Snackbar({text : I18n.t('shouldSelectOneAtLeast') , type : 'danger'}); 
+         if (!selected) {
+            return new Snackbar({
+              text: I18n.t('shouldSelectOneAtLeast'),
+              type: 'danger'
+            });
+         }
+
          setIsLoading(true);
-         //Submit data to api
          api.put(endpoints.profile + '/' + user.account?.profile.id, {
-            'body_shape_id' : selected
+            user_id: user?.account?.id,
+            step: 'bodyShape',
+            body_shape_id : selected
           })
           .then(res => {
-              setIsLoading(false);
-              dispatch(updateProfile(res.data.data));
-              goToNext();
+            setIsLoading(false);
+            dispatch(updateProfile(res.data.data));
+            goToNext();
           })
           .catch(err => {
             console.log({ err: err.response });
@@ -394,7 +404,7 @@ const CreateProfile = ({...props}) => {
                 label={'Ok'}
                 bgColor={'#D4AF37'}
                 labelColor ={'#FFF'}
-                onPress={() => {  
+                onPress={() => {
                   setActiveStep(2);
                   setModalSubText('');
                   setModalImage('');
@@ -407,14 +417,15 @@ const CreateProfile = ({...props}) => {
       }
 
       useEffect(() => {
+        console.log(user.account.profile.body_shape);
+        if (user.account?.profile.body_shape) {
+          setSelected(user.account.profile.body_shape.id);
+        }
+
         if (activeStep === 1 ) {
           setData(firstStepChoices);
         } else {
           getBodyShapeChoices();
-        }
-        if (user.account?.profile.body_shape) {
-          setActiveStep(2);
-          setSelected(user.account.profile.body_shape.id);
         }
       }, [activeStep]);
 
@@ -423,23 +434,11 @@ const CreateProfile = ({...props}) => {
           <Text style={style.stepHeaderText}>
              {I18n.t('howUniqueYourBody')}
           </Text>
-          {/* <FlatList  
-            contentContainerStyle={{ alignSelf:'center', marginStart: 20 }}
-            horizontal={false}
-            data={data}
-            numColumns={2}
-            key={'h'}
-            renderItem={(item, index)=> renderItem(item, index)}
-            keyExtractor={(item, index) => item.title}
-            extraData={activeStep}
-          /> */}
           <ScrollView>
            {data && (
-              <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
-              {data.map((item) => (
-                <RenderItem key={item.id} item={item} />
-              ))}
-              </View>
+            <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
+              {data.map((item) => <RenderItem key={item.id} item={item} />)}
+            </View>
           )}
          </ScrollView>
          <TallaButton 
@@ -459,7 +458,6 @@ const CreateProfile = ({...props}) => {
       )
    }
 
-
    // Step Three Container
    const StepThree = () => {
       const [selected , setSelected] = useState(0);      
@@ -467,7 +465,7 @@ const CreateProfile = ({...props}) => {
       const [isLoading, setIsLoading] = useState(false);
 
       /**
-       * Get Body shape choices
+       * Get Skin glow choices
        */
       const getSkinColorsChoices = () => {
          api  
@@ -490,9 +488,10 @@ const CreateProfile = ({...props}) => {
 
          setIsLoading(true);
          //Submit data to api
-         api  
-            .put(endpoints.profile + '/' + user.account?.profile.id, {
-               'skin_glow_id' : selected
+         api.put(endpoints.profile + '/' + user.account?.profile.id, {
+              user_id: user?.account?.id,
+              step: 'skinGlow',
+              skin_glow_id : selected
             })
             .then(res => {
                setIsLoading(false);
@@ -559,7 +558,7 @@ const CreateProfile = ({...props}) => {
             .then(res => setData(res.data.data))
       }
 
-      const renderItem = (item) => {
+      const renderItem= (item) => {
          return  <Selector 
             item={item}
             isCurrentSelected={selectedIds.includes(item.item.id)}
@@ -587,9 +586,9 @@ const CreateProfile = ({...props}) => {
          
          setIsLoading(true);
          //Submit data to api
-         api  
-            .put(endpoints.profile +'/'+ user.account?.profile.id, {
-               'job_id' : selectedData
+         api.put(endpoints.profile +'/'+ user.account?.profile.id, {
+               step: 'job',
+               job_id : selectedData,
             })
             .then(res => {
                setIsLoading(false);
@@ -598,7 +597,8 @@ const CreateProfile = ({...props}) => {
                //Navigate to next step
                goToNext();
             })
-            .catch(err => {
+            .catch(err => { 
+              console.log(err.response);
                setIsLoading(false);
                new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
             });
@@ -630,7 +630,7 @@ const CreateProfile = ({...props}) => {
             data={ data}
             numColumns={2}
             key={( 'h' )}
-            renderItem = {(item)=> renderItem(item)}
+            renderItem={renderItem}
             keyExtractor={(item, index) => index}
          />
          <TallaButton 
@@ -691,9 +691,9 @@ const CreateProfile = ({...props}) => {
          
          setIsLoading(true);
          //Submit data to api
-         api  
-            .put(endpoints.profile + '/' + user.account?.profile.id, {
-               'goal_id' : selectedData
+         api.put(endpoints.profile + '/' + user.account?.profile.id, {
+              step: 'goal',
+              goal_id : selectedData,
             })
             .then(res => {
                setIsLoading(false);
@@ -794,9 +794,9 @@ const CreateProfile = ({...props}) => {
 
         setIsLoading(true);
         //Submit data to api
-        api  
-          .put(endpoints.profile + '/' + user.account?.profile.id, {
-              'favourite_style_id' : selectedData
+        api.put(endpoints.profile + '/' + user.account?.profile.id, {
+            step: 'style',
+            favourite_style_id : selectedData,
           })
           .then(res => {
               setIsLoading(false);
@@ -875,7 +875,7 @@ const CreateProfile = ({...props}) => {
           </View>
        </SafeAreaView>
        <View style={style.stepsNumberContainer}>
-          <View style={{width : '90%' , alignSelf:'center' , flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
+          <View style={{width : '90%', alignSelf:'center', flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
             <FastImage 
               source = {
                 require('../../assets/icons/one-blue-active.png')
@@ -883,35 +883,35 @@ const CreateProfile = ({...props}) => {
               resizeMode="contain"
               style={style.stepIcon} 
             />
-            <View style={style.activeLine}></View>
+            <View style={style.activeLine} />
             <FastImage  
               source={ activeStep >= 2 ? require('../../assets/icons/two-blue-active.png') :
                                                 require('../../assets/icons/two-inactive.png')}
               resizeMode="contain"
               style={style.stepIcon} 
             />
-            <View style={activeStep > 2 ? style.activeLine : style.inActiveLine}></View>
+            <View style={activeStep > 2 ? style.activeLine : style.inActiveLine} />
             <FastImage 
               source = {activeStep >= 3 ? require('../../assets/icons/three-blue-active.png') :
                                                 require('../../assets/icons/three-inactive.png')}
               resizeMode="contain"
               style={style.stepIcon} 
             />
-            <View style={activeStep > 3 ? style.activeLine : style.inActiveLine}></View>
+            <View style={activeStep > 3 ? style.activeLine : style.inActiveLine} />
                <FastImage 
                 source={ activeStep >= 4 ? require('../../assets/icons/four-blue-active.png') :
                                                    require('../../assets/icons/four-inactive.png')}
                 resizeMode="contain"
                 style={style.stepIcon} 
               />
-            <View style={activeStep > 4 ? style.activeLine : style.inActiveLine}></View>
+            <View style={activeStep > 4 ? style.activeLine : style.inActiveLine} />
             <FastImage 
               source={ activeStep >= 5 ? require('../../assets/icons/five-blue-active.png') :
                                                 require('../../assets/icons/five-inactive.png')}
               resizeMode="contain"
               style={style.stepIcon} 
             />
-            <View style={activeStep > 5 ? style.activeLine : style.inActiveLine}></View>
+            <View style={activeStep > 5 ? style.activeLine : style.inActiveLine} />
             <FastImage 
               source={ activeStep == 6 ? require('../../assets/icons/six-blue-active.png') :
                                                 require('../../assets/icons/six-inactive.png')}

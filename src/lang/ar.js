@@ -142,7 +142,7 @@ export default {
    //
    errorWhileGetData : 'خطأ اثناء تحميل البيانات',
 
-   makeQuotation: 'Make Quotation',
+   makeQuotation: 'Create Quotation',
    startSession: 'Start Session',
 
    unAuthorized: "خطأ في البريد الإلكتروني او كلمة المرور!",

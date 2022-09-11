@@ -45,7 +45,7 @@ const Selector = ({...props}) => {
                </Text>
             </BorderlessButton>
          :
-          <Animatable.View animation={'slideInUp'}>
+          <Animatable.View animation={'slideInUp'} useNativeDriver={true}>
               <BorderlessButton style={[style.container ,props.style,{
                     height : props.hideText ? 120 : 175
                   }]}

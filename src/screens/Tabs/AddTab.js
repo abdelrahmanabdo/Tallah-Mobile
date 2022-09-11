@@ -35,7 +35,7 @@ const {width} = Dimensions.get('screen');
 
 const AddTab = ({ route, ...props}) => {
   const user = useSelector(state => state.user);
-  const [ showCamerModal, setShowCameraModal ] = useState(false);
+  const [showCamerModal, setShowCameraModal ] = useState(false);
   const [addItemData, setAddItemData] = useState({});
   const [activeTab, setActiveTab ] = useState(1);
   const [addItemActiveTab, setAddItemActiveTab ] = useState(1);
@@ -48,16 +48,14 @@ const AddTab = ({ route, ...props}) => {
   * Get categories
   */
   const getCategories = () => {
-      api.get(endpoints.categories)
-          .then(res => setCategories(res.data.data));
+    api.get(endpoints.categories).then(res => setCategories(res.data.data));
   };
 
   /**
   * Get colors
   */
   const getColors = () => {
-      api.get(endpoints.colors)
-          .then(res => setColors(res.data.data));
+    api.get(endpoints.colors).then(res => setColors(res.data.data));
   };
 
 
@@ -65,18 +63,17 @@ const AddTab = ({ route, ...props}) => {
   * Get brands
   */
   const getBrands = () => {
-      api.get(endpoints.brands)
-          .then(res => setBrands(res.data.data));
+    api.get(endpoints.brands).then(res => setBrands(res.data.data));
   };
 
   useEffect(() => {
     if (route.params && route.params.activeTab) {
       setActiveTab(route.params.activeTab);
     }
+
     getCategories();
     getBrands();
     getColors();
-
   }, []);
 
 
@@ -320,170 +317,188 @@ const AddTab = ({ route, ...props}) => {
 
     // Add outfit tab
     const AddOutfitTab = () => {
-        const [seasons] = useState([
-          {
-              id : 1 ,
-              name : 'Summer',
-              name_en : 'Summer',
-          },
-          {
-              id : 2 ,
-              name : 'Winter',
-              name_en : 'Winter',
-          },
-        ]);
-        const [items , setItems] = useState([]);
-        const [selectedItem , setSelectedItem] = useState();
-        const [selectedItems , setSelectedItems] = useState([]);
-        const [isLoading, setIsLoading] = useState(false);
-        const pan = selectedItems.map(() => new Animated.ValueXY() );
-        
-        /**
-         * Get current user already added items to can add new outfit
-         * @param {*} seasonId // Default the index 0 of seasons
-         * @param {*} categoryId // Default the index 0 of categories
-         */
-        const getUserClosetItems = (seasonId = seasons[0]?.id ?? null,
-                                    categoryId = categories[0]?.id ?? null) => {
-          api.get(`${endpoints.closet}?user_id=${user.account?.id}&season=${
-            seasonId}&category_id=${categoryId}`)
-              .then(res => setItems(res.data.data));
-        } 
+      const [seasons] = useState([
+        {
+          id: 1 ,
+          name: 'Summer',
+          name_en: 'Summer',
+        },
+        {
+          id: 2 ,
+          name: 'Winter',
+          name_en: 'Winter',
+        },
+      ]);
+      const [items , setItems] = useState([]);
+      const [selectedItem , setSelectedItem] = useState(null);
+      const [selectedItems , setSelectedItems] = useState([]);
+      const [selectedSeasonId, setSelectedSeasonId] = useState(1);
+      const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+      const [isLoading, setIsLoading] = useState(false);
+      const pan = selectedItems.map(() => new Animated.ValueXY() );
+      
+      /**
+       * Get current user already added items to can add new outfit
+       * @param {*} seasonId // Default the index 0 of seasons
+       * @param {*} categoryId // Default the index 0 of categories
+       */
+      const getUserClosetItems = (seasonId = selectedSeasonId, categoryId = selectedCategoryId) => {
+        api.get(`${endpoints.closet}?user_id=${user.account?.id}&season=${
+          seasonId}&category_id=${categoryId}`)
+            .then(res => setItems(res.data.data));
+      } 
 
-        const getPanResponder = (index) => {
-            return PanResponder.create({
-                onMoveShouldSetPanResponder: () => true,
-                onStartShouldSetPanResponder: () => true,
-                onPanResponderGrant: () => {
-                  pan[index].setOffset({
-                    x: pan[index].x._value,
-                    y: pan[index].y._value
-                  });
-                },
-                onPanResponderMove : Animated.event([null,{
-                    dx  : pan[index].x,
-                    dy  :  pan[index].y
-                }]),
-                onPanResponderRelease: () => {
-                  pan[index].flattenOffset();
-                }
-            });    
-        };
+      const getPanResponder = (index) => {
+          return PanResponder.create({
+              onMoveShouldSetPanResponder: () => true,
+              onStartShouldSetPanResponder: () => true,
+              onPanResponderGrant: () => {
+                pan[index].setOffset({
+                  x: pan[index].x._value,
+                  y: pan[index].y._value
+                });
+              },
+              onPanResponderMove: Animated.event([null, {
+                dx: pan[index].x,
+                dy:  pan[index].y
+              }], {useNativeDriver: false}),
+              onPanResponderRelease: () => pan[index].flattenOffset()
+          });    
+      };
 
-        const removeItem = (itemId) => {
-          setSelectedItems(selectedItems.filter((item) => item.id != itemId));
-        };
+      const removeItem = (itemId) => {
+        setSelectedItems(selectedItems.filter((item) => item.id != itemId));
+      };
 
-        /**
-         * Submit outfit 
-         */
-        const submitNewOutfit = () => {
-          if (selectedItems.length < 2)
-            return new Snackbar({'type' : 'danger' , 'text' : 'You should select at least 2 items'});
-            setIsLoading(true);
+      /**
+       * Submit outfit 
+       */
+      const submitNewOutfit = () => {
+        if (selectedItems.length < 2)
+          return new Snackbar({'type' : 'danger' , 'text' : 'You should select at least 2 items'});
+          setIsLoading(true);
 
-          api.post(endpoints.outfit, {
-              'user_id': user.account.id,
-              'items'  : selectedItems.map(item => item.id),
-            })
-            .then(res => {
-              setSelectedItems([]);
-              setSelectedItem(null);
-              setIsLoading(false);
-              new Snackbar({text : 'Outfit added successfully' , type : 'success'});
-            })
-            .catch(err => {
-              setIsLoading(false);
-              new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
-            });
-        };
+        api.post(endpoints.outfit, {
+            'user_id': user.account.id,
+            'items'  : selectedItems.map(item => item.id),
+          })
+          .then(res => {
+            setSelectedItems([]);
+            setSelectedItem(null);
+            setIsLoading(false);
+            new Snackbar({text : 'Outfit added successfully' , type : 'success'});
+          })
+          .catch(err => {
+            setIsLoading(false);
+            new Snackbar({text : I18n.t('unknownError') , type : 'danger'});
+          });
+      };
 
+      const renderAddLookBookItem = (item) => {
+        const currentItem = item.item;
+        return <Selector
+          item={item}
+          style={{width: width/3-20}}
+          hideText
+          resizeMode={'cover'}
+          isCurrentSelected={selectedItem == currentItem.id}
+          onSelect={(value) => {
+            console.log({value});
+            if (!selectedItems.find((item) => item.id == value)) {
+              setSelectedItem(value);
+              selectedItems.push(currentItem);
+              setSelectedItems([...selectedItems]);
+            }
+          }}
+        />
+      }
 
-        useEffect(() => {
-          if (route.params && route.params.selectedItem) {
-            const item = route.params.selectedItem;
-            setSelectedItem(item);
-            setSelectedItems([ ...selectedItems, item ]);
-          }
-          getUserClosetItems();
-        },[]);
+      useEffect(() => {
+        if (route.params && route.params.selectedItem) {
+          const item = route.params.selectedItem;
+          setSelectedItem(item);
+          setSelectedItems([ ...selectedItems, item ]);
+        }
+        getUserClosetItems();
+      },[]);
 
-        return <View style={style.outfitContainer}>
-            <View style={style.geastureContainer}>
-              {selectedItems.map((item,index) => {
-                return <Animated.View 
-                    key={index}
-                    style={{transform: [{ translateX: pan[index].x }, { translateY: pan[index].y }] }}
-                          {...getPanResponder(index).panHandlers}
+      return <View style={style.outfitContainer}>
+          <View style={style.geastureContainer}>
+            {selectedItems.map((item,index) => {
+              return <Animated.View 
+                  key={index}
+                  style={{transform: [{ translateX: pan[index].x }, { translateY: pan[index].y }] }}
+                        {...getPanResponder(index).panHandlers}
+                >
+                  <ImageBackground    
+                    style={[style.selectedItemContainer,{ borderRadius: 9 }]}
+                    resizeMode={'contain'}
+                    source={ item.image
+                      ? {uri: item.image} 
+                      :  require('../../assets/images/closet-item-default.png')}
                   >
-                    <ImageBackground    
-                      style={[style.selectedItemContainer,{ borderRadius: 9 }]}
-                      resizeMode={'contain'}
-                      source={ item.image
-                        ? {uri: item.image} 
-                        :  require('../../assets/images/closet-item-default.png')}
-                    >
-                      <Pressable onPress={() => removeItem(item.id)}
-                                  style={{alignSelf : 'flex-end',marginEnd : 5 , marginTop : 5}}>
-                        <FastImage source={require('../../assets/icons/close-bg.png')}
-                                  resizeMode={'contain'}
-                                  style={{width : 20 , height : 20}} />
-                      </Pressable>
-                    </ImageBackground>
-                </Animated.View> 
-              })}
+                    <Pressable onPress={() => removeItem(item.id)}
+                                style={{alignSelf : 'flex-end',marginEnd : 5 , marginTop : 5}}>
+                      <FastImage source={require('../../assets/icons/close-bg.png')}
+                                resizeMode={'contain'}
+                                style={{width : 20 , height : 20}} />
+                    </Pressable>
+                  </ImageBackground>
+              </Animated.View> 
+            })}
+          </View>
+          <View style={style.whiteBox}>
+            <View style={{flexDirection : 'row'}}>
+              <Dropdown
+                items={seasons}
+                style={{width : '49%'}}
+                onChangeValue={seasonId => {
+                  setSelectedSeasonId(seasonId);
+                  getUserClosetItems(seasonId, selectedCategoryId);
+                }}
+                name={I18n.t('Season')}
+              />
+              <Dropdown   
+                items={categories}
+                style={{width : '49%',marginStart:5}}
+                onChangeValue={categoryId => {
+                  setSelectedCategoryId(categoryId);
+                  getUserClosetItems(selectedSeasonId, categoryId);
+                }}
+                name={I18n.t('category')} 
+              />
             </View>
-            <View style={style.whiteBox}>
-              <View style={{flexDirection : 'row'}}>
-                <Dropdown   items={seasons}
-                            style={{width : '49%'}}
-                            onChangeValue={val => getUserClosetItems(val)}
-                            name={I18n.t('Season')} />
-                <Dropdown   items={categories}
-                            style={{width : '49%',marginStart:5}}
-                            onChangeValue={val => getUserClosetItems(seasons[0].id, val)}
-                            name={I18n.t('category')} />
-              </View>
-              <>
-              {
-                (!isLoading && !items.length) ?
-                <NotFound 
-                  text="OOH! You’re Missing A lot Start add items Now"
-                />
-                :
-                <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
-                 { items.map((item, index) => (
-                   <Selector
-                      item={{item}}
-                      style={{width : width  / 3 - 20}}
-                      hideText
-                      resizeMode={'stretch'}
-                      isCurrentSelected={selectedItem == item.id}
-                      onSelect={(value)=>{
-                        if (!selectedItems.find((item) => item.id == value)) {
-                          setSelectedItem(value);
-                          selectedItems.push(item);
-                          setSelectedItems([...selectedItems]);
-                        }
-                      }}
-                    />
-                 )) }
-                 </View>
-              }
-              {
-                (!!items.length || !!selectedItems.length) 
-                &&
-                <Button 
-                  label={'Save'} 
-                  labelColor={'#FFF'}
-                  style={{position: 'absolute', bottom : 5 ,width : '98%',padding :15}} 
-                  onPress={submitNewOutfit}
-                  isLoading={isLoading}
-                />
-              }
-              </>
-            </View>
-        </View>
+            <>
+            {
+              (!isLoading && !items.length) ?
+              <NotFound 
+                text="OOH! You’re Missing A lot Start add items Now"
+              />
+              :
+                <FlatList  
+                  contentContainerStyle={{alignSelf:'center',marginVertical: 10}}
+                  horizontal={false}
+                  data={items}
+                  numColumns={3}
+                  key={('h')}
+                  renderItem={renderAddLookBookItem}
+                  keyExtractor={(item, index) => index}
+              />
+            }
+            {
+              (!!items.length || !!selectedItems.length) 
+              &&
+              <Button 
+                label={'Save'} 
+                labelColor={'#FFF'}
+                style={{position: 'absolute', bottom : 5 ,width : '98%',padding :15}} 
+                onPress={submitNewOutfit}
+                isLoading={isLoading}
+              />
+            }
+            </>
+          </View>
+      </View>
     };
 
 

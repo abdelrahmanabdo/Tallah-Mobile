@@ -147,7 +147,7 @@ export default {
 
    errorWhileGetData : 'Error while getting data',
 
-   makeQuotation: 'Make Quotation',
+   makeQuotation: 'Create Quotation',
    startSession: 'Start Session',
 
    unAuthorized: "Wrong Email Or Password",

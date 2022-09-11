@@ -4,11 +4,10 @@ import {
   View,
   ImageBackground,
   Animated,
-  PanResponder,
   Pressable,
   I18nManager
 } from 'react-native';
-import { RectButton, ScrollView, BorderlessButton } from 'react-native-gesture-handler';
+import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import FastImage from 'react-native-fast-image';
 import Share from "react-native-share";
 import Modal from 'react-native-modal';
@@ -22,7 +21,6 @@ import style from '../../assets/styles/ClosetItemViewStyle';
 
 //Components
 import TallaButton from '../../components/Button';
-import OutfitItem from '../../components/OutfitItem';
 import ModalStyle from '../../assets/styles/ModalStyle';
 import Checkbox from '../../components/Checkbox';
 
@@ -33,58 +31,33 @@ import Snackbar from '../../components/Snackbar';
 import Spinner from '../../components/Spinner';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const OutfitItemView = ({...props}) => {
+const OutfitItemView = ({ ...props }) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showDeleteModal , setShowDeleteModal ] = useState(false);
   const [showEditModal , setShowEditModal ] = useState(false);
-  const pan = data?.items?.map(() => new Animated.ValueXY());
 
    const getOutfitItemData = () => {
       if (!props.route?.params?.itemId) return;
 
       setIsLoading(true);
-      api.get(endpoints.outfit + '/' + props.route.params.itemId)
-          .then(res => {
-            setData(res.data.data);
-            setIsLoading(false);
-          })
-          .catch((err) => console.log(err.response));
-   };
-
-    const getPanResponder = (index) => {
-      return PanResponder.create({
-          onMoveShouldSetPanResponder: () => true,
-          onStartShouldSetPanResponder: () => true,
-          onPanResponderGrant: () => {
-            pan[index].setOffset({
-              x: pan[index].x._value,
-              y: pan[index].y._value
-            });
-          },
-          onPanResponderMove  : Animated.event([null,{
-              dx  : pan[index].x,
-              dy  :  pan[index].y
-          }]),
-          onPanResponderRelease: () => {
-            pan[index].flattenOffset();
-          }
-      });    
-    };
-
-   /**
-    * Render related outfits 
-    */
-   const renderReleatedItem = ({item , index}) => {
-      return <OutfitItem key={index} item={item} />
+      api
+        .get(endpoints.outfit + '/' + props.route.params.itemId)
+        .then(res => {
+          setData(res.data.data);
+          setIsLoading(false);
+        })
+        .catch((err) => console.log(err.response));
    };
 
    const seasonValue = data && data.items.length > 0
      ? data.items.map((item) => item.closet_item).reduce((acc, current, index, outfits) => {
         const currentSeason = ['1', '3'].includes(current.season) ? 'Summer' : 'Winter';
-        acc += currentSeason + (index == outfits.length - 1 ? ' ' : ', ');
+        if (!acc.includes(currentSeason)) {
+          acc += currentSeason;
+        }
         return acc;
-      }, ' ')
+       }, ' ')
     : '';
 
 
@@ -318,25 +291,12 @@ const OutfitItemView = ({...props}) => {
         isLoading 
         ? <Spinner />
         : <>
-          <View style={[ style.geastureContainer, { 
-              flex: 2 , backgroundColor: '#F8F8F8', paddingStart: '15%', paddingTop: 10
+          <View style={[style.geastureContainer, { 
+              flex: 3, backgroundColor: '#F8F8F8', paddingStart: '8%', paddingTop: 10,
             }]}
           >
             {data && data.items && data.items.map((item, index) => {
-              return <Animated.View 
-                    key={index}
-                    style = {
-                      {
-                        transform: [{
-                          translateX: pan[index].x
-                        }, {
-                          translateY: pan[index].y
-                        }],
-                        width: '40%'
-                      }
-                    }
-                    // {...getPanResponder(index).panHandlers}
-                >
+              return <Animated.View key={index} style = {{ width: '30%' }} >
                   <ImageBackground    
                     style={[style.selectedItemContainer,{ borderRadius: 9 }]}
                     resizeMode={'stretch'}
@@ -366,19 +326,6 @@ const OutfitItemView = ({...props}) => {
                 style={{ flex: 1, backgroundColor: '#D4AF37', borderColor: '#D4AF37', borderWidth: 1 }}
               />
             </View>
-            {/* {
-              data?.related_items && data?.related_items.length > 0 &&
-              <View>
-                  <Text style={style.relatedItemsText}>
-                    More outfits
-                  </Text>
-                  <FlatList 
-                    horizontal
-                    data={data?.related_items}
-                    renderItem={renderReleatedItem}
-                  />
-              </View>
-            } */}
           </ScrollView>
         </>
       }

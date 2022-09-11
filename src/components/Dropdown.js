@@ -39,13 +39,14 @@ const Dropdown = ({...props}) => {
         padding : 15,
         backgroundColor:  '#F8F8F8',
         marginVertical : 10,
-        borderRadius : 15
+        borderRadius : 15,
       },
       itemText : {
         alignSelf: 'flex-start' ,
         color: '#000',
         fontFamily : "Roboto",
         fontSize: 16,
+        width: '90%'
       },
       placeholderText : {
         color: props.placeholderText ?? '#000',
@@ -121,7 +122,7 @@ const Dropdown = ({...props}) => {
                   style={[Style.itemText, { color: (
                     props.isConfirmable ?
                       ( activeSelectedItem == index  ? '#FFF' : '#000') :
-                      activeItem == index ? '#012647' : '#000' )
+                      activeItem == index ? '#012647' : '#000' ),
                   }]}
                  >
                   {I18nManager.isRTL ? item.name : item.name_en}
@@ -144,7 +145,7 @@ const Dropdown = ({...props}) => {
     </Modal>
   };
 
-  return <Animatable.View style={[Style.container,props.style]}>
+  return <Animatable.View style={[Style.container,props.style]} useNativeDriver={true}>
       <View style={{flexDirection:'row',alignItems:'center',marginBottom  :10}}>
         {
           props.name &&

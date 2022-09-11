@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, FlatList, Pressable } from 'react-native';
+import { Text, View, FlatList, Pressable, ActivityIndicator } from 'react-native';
 import { RectButton, BorderlessButton, ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import Modal from 'react-native-modal';
@@ -31,6 +31,8 @@ const ClosetTab = ({ ...props }) => {
   const user = useSelector(state => state.user);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab , setActiveTab ] = useState(1);
+  const [selectedSeason, setSelectedSeason] = useState(1);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [activeCategoryIndex , setActiveCategoryIndex ] = useState(null);
   const [showFilterModal , setShowFilterModal ] = useState(false);
   const [categories , setCategories ] = useState([]);
@@ -42,7 +44,7 @@ const ClosetTab = ({ ...props }) => {
     */
     const getCategories = () => {
         api.get(endpoints.categories)
-           .then(res => setCategories(res.data.data));
+          .then(res => setCategories(res.data.data));
     };
 
     /**
@@ -50,12 +52,17 @@ const ClosetTab = ({ ...props }) => {
      * @param 
      * @returns blogs
      */
-    const getUserCloset = (season = 1, categoryId = null, colorId = null, brandId = null) => {
+    const getUserCloset = async (
+      season = selectedSeason,
+      categoryId = selectedCategoryId,
+      colorId = null,
+      brandId = null
+    ) => {
       setIsLoading(true);
-      api.get(`${endpoints.closet}?user_id=${user.account?.id}&category_id=${
+      await api.get(`${endpoints.closet}?user_id=${user.account?.id}&category_id=${
         categoryId}&season=${season}&color=${colorId}&brand=${brandId}`)
-           .then(res => setClosetItems(res.data.data), setIsLoading(false))
-           .catch(err => setIsLoading(false));
+           .then(res => setClosetItems(res.data.data))
+           .finally(() => setIsLoading(false));
     };
 
     /**
@@ -64,12 +71,12 @@ const ClosetTab = ({ ...props }) => {
    const MoreModal = () => {
       return <Modal  
             isVisible={showMoreModal}
-            style={{ margin: 0, justifyContent: 'flex-end' }}
             backdropOpacity={.7}
+            style={{margin: 0, justifyContent: 'flex-end'}}
           >
         <View style={ModalStyle.actionModalContainer}>
           <View style={ModalStyle.actionModalHeader}>
-              <View></View>
+              <View />
               <Text style={ModalStyle.headerText}>
                 Find More
               </Text>
@@ -80,43 +87,45 @@ const ClosetTab = ({ ...props }) => {
               </Pressable>
           </View>
           <View style={{flexDirection:"column"}}>
-              <Pressable  style={ModalStyle.selectRow}
-                          android_ripple={{color:  ('#D4AF37')}}
-                          onPress={()=>{
-                                  setShowMoreModal(false);
-                                  props.navigation.navigate('add') }}>
-                  <FastImage source={require('../../assets/icons/mix-and-match.png')}
-                              resizeMode={'contain'}
-                              style={{width:35,height:35,marginEnd : 20}}/>
-                  <Text style={ModalStyle.textBold}>
-                      Mix & match
-                  </Text>
+            <Pressable  style={ModalStyle.selectRow}
+                        android_ripple={{color:  ('#D4AF37')}}
+                        onPress={()=>{
+                                setShowMoreModal(false);
+                                props.navigation.navigate('add') }}>
+                <FastImage source={require('../../assets/icons/mix-and-match.png')}
+                            resizeMode={'contain'}
+                            style={{width:35,height:35,marginEnd : 20}}/>
+                <Text style={ModalStyle.textBold}>
+                    Mix & match
+                </Text>
               </Pressable>
               <Pressable style={ModalStyle.selectRow}
-                          android_ripple={{color:  ('#D4AF37')}}
-                          onPress={()=>{
-                              setShowMoreModal(false);
-                              props.navigation.navigate('calendar') }}>
-                  <FastImage source={require('../../assets/icons/modal-calendar.png')}
-                              resizeMode={'contain'}
-                              style={{width:35,height:35,marginEnd : 20}}/>
-                  <Text style={ModalStyle.textBold}>
-                      Calendar
-                  </Text>
+                        android_ripple={{color:  ('#D4AF37')}}
+                        onPress={()=>{
+                            setShowMoreModal(false);
+                            props.navigation.navigate('calendar') }}>
+                <FastImage source={require('../../assets/icons/modal-calendar.png')}
+                            resizeMode={'contain'}
+                            style={{width:35,height:35,marginEnd : 20}}/>
+                <Text style={ModalStyle.textBold}>
+                    Calendar
+                </Text>
               </Pressable>
               <Pressable 
                 style={ModalStyle.selectRow}
                 android_ripple={{color: ('#D4AF37')}}
                 onPress={() => {
-                          setShowMoreModal(false);
-                          props.navigation.navigate('favourites');
-                        }}
+                  setShowMoreModal(false);
+                  props.navigation.navigate('favourites');
+                }}
               >
-                <FastImage source={require('../../assets/icons/modal-favourites.png')}
-                            resizeMode={'contain'}
-                            style={{width:35,height:35,marginEnd : 20}}/>
+                <FastImage 
+                  source={require('../../assets/icons/modal-favourites.png')}
+                  resizeMode={'contain'}
+                  style={{width:35,height:35,marginEnd : 20}}
+                />
                 <Text style={ModalStyle.textBold}>
-                    Favourites
+                  Favourites
                 </Text>
               </Pressable>
             </View>
@@ -135,20 +144,13 @@ const ClosetTab = ({ ...props }) => {
         const [selectedCategory, setSelectedCategory] = useState();
         const [selectedBrand, setSelectedBrand] = useState();
 
-
-        /**
-        * Get colors
-        */
+        //Get colors
         const getColors = () => api.get(endpoints.colors).then(res => setColors(res.data.data));
 
-        /**
-        * Get brands
-        */
+        // Get brands
         const getBrands = () => api.get(endpoints.brands).then(res => setBrands(res.data.data));
 
-        /**
-         * On Submit filter
-         */
+        // On Submit filter
         const onSubmitModal = () => {
           getUserCloset(season, selectedCategory, selectedColor, selectedBrand);
           setShowFilterModal(false);
@@ -244,7 +246,8 @@ const ClosetTab = ({ ...props }) => {
             android_ripple={{color:  ('#D4AF37')}}
             onPress={() => {
               getActiveCategory(index);
-              getUserCloset(null,item.id)
+              setSelectedCategoryId(item.id);
+              getUserCloset(selectedSeason, item.id);
             }}
           >
             <FastImage 
@@ -301,6 +304,7 @@ const ClosetTab = ({ ...props }) => {
           <RectButton 
             onPress={() => {
               setActiveTab(1);
+              setSelectedSeason(1);
               getUserCloset(1);
             }}
             style = {
@@ -316,6 +320,7 @@ const ClosetTab = ({ ...props }) => {
           <RectButton 
             onPress={() => { 
               setActiveTab(2);
+              setSelectedSeason(2);
               getUserCloset(2);
             }}
             style = {
@@ -333,65 +338,64 @@ const ClosetTab = ({ ...props }) => {
           </RectButton>
         </View>
       </View>
-      { 
-        isLoading
-        ? <Spinner />
-        : <> 
-            <View style={style.giftContainer}>
-              <FastImage 
-                source={require('../../assets/icons/gift.png')}
-                style={{width: 30 , height : 30,marginEnd : 10}} 
-              />
-              <View style={{width : '90%'}}>
-                <Text style={[GeneralStyle.blackBoldText,{
-                    marginBottom: 7, color: '#012647',
-                    fontSize: 15, fontWeight: '500'
-                  }]}
-                >
-                  We have a special gift for you!
-                </Text>
-                <Text style={[GeneralStyle.blackText,{marginBottom: 2, lineHeight: 19, fontWeight: '400', fontSize: 12}]}>
-                  Add up to 20 items or more to join our lovable ritzy
-                  Tallah ladies to receive your free online makeover session
-                  and you might win a 250 $ gift card from your favorite
-                  brand.
-                </Text> 
-                { closetItems.length >= 20 && 
-                  <RectButton style={{alignSelf:'flex-end'}}
-                              onPress={()=>{props.navigation.navigate('gift')}}>
-                    <Text style={{color : "#D4AF37",textDecorationLine:'underline'}}>
-                      {I18n.t('viewGift')} 
-                    </Text>
-                  </RectButton>
-                }  
-              </View>
-          </View>
-          <View style={[style.categoriesRow]}> 
-            <FlatList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              data={categories}
-              keyExtractor={(item,index) => index.toString()}
-              renderItem={renderCategoryBox}
-            />
-          </View>
-          <View style={[style.closetItemsListContainer]}> 
-            {
-              closetItems.length == 0 ?
-              <NotFound text="OOH! You’re Missing A lot Start add items Now"/>
-              :
-              <FlatList 
+      <View style={style.giftContainer}>
+        <FastImage 
+          source={require('../../assets/icons/gift.png')}
+          style={{width: 30 , height : 30,marginEnd : 10}} 
+        />
+        <View style={{width : '90%'}}>
+          <Text style={[GeneralStyle.blackBoldText,{
+              marginBottom: 7, color: '#012647',
+              fontSize: 15, fontWeight: '500'
+            }]}
+          >
+            We have a special gift for you!
+          </Text>
+          <Text style={[GeneralStyle.blackText,{marginBottom: 2, lineHeight: 19, fontWeight: '400', fontSize: 12}]}>
+            Add up to 20 items or more to join our lovable ritzy
+            Tallah ladies to receive your free online makeover session
+            and you might win a 250$ gift card from your favorite
+            brand.
+          </Text> 
+          { closetItems.length >= 20 && 
+            <RectButton style={{alignSelf:'flex-end'}} onPress={()=> props.navigation.navigate('gift')}>
+              <Text style={{color : "#D4AF37",textDecorationLine:'underline'}}>
+                {I18n.t('viewGift')} 
+              </Text>
+            </RectButton>
+          }  
+        </View>
+      </View>
+      <View style={[style.categoriesRow]}> 
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={categories}
+          keyExtractor={(item,index) => index.toString()}
+          renderItem={renderCategoryBox}
+        />
+      </View>
+      <View style={[style.closetItemsListContainer]}>
+        {
+          isLoading
+          ? <ActivityIndicator color="#D4AF37" style={{margin: 'auto'}} />
+          :
+          <> 
+          {
+            !closetItems.length
+              ? <NotFound text="OOH! You’re Missing A lot Start add items Now" />
+              : <FlatList 
                 showsVerticalScrollIndicator={false}
                 horizontal={false}
-                keyExtractor={(item,index) => index.toString()}
+                keyExtractor={(item, index) => `${index}-${item.id}`}
                 numColumns={3}
                 data={closetItems}
                 renderItem={renderClosetItem}
               />
-            }
-          </View>
-        </>
-      }
+          }
+          </>
+        }
+      </View>
     <FilterModal />
     <MoreModal />
   </SafeAreaView>

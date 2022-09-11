@@ -20,57 +20,54 @@ const Datepicker = ({...props}) => {
   }, []);
   
   return  <View style={{marginVertical : 7}}> 
-        <Animatable.View style={Style.container}>
-          <View style={{flexDirection:'row',alignItems:'center'}}>
-            {
-              props.name &&
-              <Text style={[Style.placeholderText,{fontWeight : '700'}]}>
-                {props.name}
-              </Text>                     
-            }
-          </View>
-          <DatePicker
-            style={{ width: '100%', marginTop: 15 }}
-            mode="date"
-            date={selectedValue}
-            placeholder={I18n.t('selectYourBirthDate')}
-            format="DD/MM/YYYY"
-            minDate="01-01-1970"
-            // maxDate="01-01-2013"
-            confirmBtnText={I18n.t('confirm')}
-            cancelBtnText={I18n.t('cancel')}
-            customStyles={{
-              dateIcon: {
-                position: 'absolute',
-                right: 5,
-                top: 4,
-                marginLeft: 0,
-              },
-              dateInput: {
-                borderRadius : 8,
-                width : width - 30,
-                justifyContent:'center',
-                alignItems:'center',
-                height: 50,
-                backgroundColor: '#FFF',
-                borderColor: '#E0E0E0'
-              },
-              dateTouchBody: {
-                backgroundColor: 'red',
-              },
-              datePickerCon: {
-                backgroundColor: Platform.OS === 'ios' ? '#043B6C' : '#FFF',
-              },
-              btnTextConfirm: {
-                color: '#D4AF37',
-                fontWeight: 'bold'
-              }
-            }}
-            iconSource={require('../assets/icons/calendar-blue.png')}
-            onDateChange={(date) =>{setSelectedValue(date); props.onChangeValue(date);}}
-          />
-        </Animatable.View>
+    <Animatable.View style={Style.container} useNativeDriver={true}>
+      <View style={{flexDirection:'row',alignItems:'center'}}>
+        {
+          props.name &&
+          <Text style={[Style.placeholderText,{fontWeight : '700'}]}>
+            {props.name}
+          </Text>                     
+        }
       </View>
+      <DatePicker
+        style={{ width: '100%', marginTop: 15 }}
+        mode="date"
+        date={selectedValue}
+        placeholder={I18n.t('selectYourBirthDate')}
+        format="DD/MM/YYYY"
+        minDate="01-01-1970"
+        confirmBtnText={I18n.t('confirm')}
+        cancelBtnText={I18n.t('cancel')}
+        theme="light"
+        customStyles={{
+          dateIcon: {
+            position: 'absolute',
+            right: 5,
+            top: 4,
+            marginLeft: 0,
+          },
+          dateInput: {
+            borderRadius : 8,
+            width : width - 30,
+            justifyContent:'center',
+            alignItems:'center',
+            height: 50,
+            backgroundColor: '#FFF',
+            borderColor: '#E0E0E0'
+          },
+          datePickerCon: {
+            backgroundColor: Platform.OS === 'ios' ? '#043B6C' : '#FFF',
+          },
+          btnTextConfirm: {
+            color: '#D4AF37',
+            fontWeight: 'bold'
+          }
+        }}
+        iconSource={require('../assets/icons/calendar-blue.png')}
+        onDateChange={(date) =>{setSelectedValue(date); props.onChangeValue(date);}}
+      />
+    </Animatable.View>
+  </View>
 };
 
 const Style = StyleSheet.create({

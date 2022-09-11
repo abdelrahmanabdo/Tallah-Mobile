@@ -77,7 +77,6 @@ const Login = ({...props}) => {
               await AsyncStorage.setItem('isCompletedProfile' , JSON.stringify(res.data.user.profile ? true : false));
               await AsyncStorage.setItem('activeUserType', JSON.stringify(res.data.user.role_id == 2 ? UserType.Stylist : UserType.User));
 
-              await new Snackbar({text : I18n.t('loginSuccessfully'), type : 'success'});
               if (res.data.user.profile) {
                 props.navigation.reset({
                   index: 0,

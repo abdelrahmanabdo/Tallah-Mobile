@@ -10,7 +10,7 @@ import FastImage from 'react-native-fast-image';
 import { useSelector } from 'react-redux';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import DatePicker from 'react-native-datepicker';
-import TimePicker from '../../../components/TimePicker';
+
 
 //Styles
 import style from './style';
@@ -21,44 +21,61 @@ import I18n from '../../../lang/I18n';
 // Components
 import TallaButton from '../../../components/Button';
 import Snackbar from '../../../components/Snackbar';
+import Input from '../../../components/Input';
+import Dropdown from '../../../components/Dropdown';
+import TimePicker from '../../../components/TimePicker';
 
 //Apis
 import api from '../../../config/api';
 import endpoints from '../../../config/endpoints';
-import Input from '../../../components/Input';
-
 
 const { width } = Dimensions.get('screen');
 
-const CreateQuotation = props  => {
-  const user = useSelector(state => state.user);
+const CreateQuotation = ({ navigation, route })  => {
+  const user = route.params.user;
   const stylist = useSelector(state => state.stylist);
-  const [data, setData] = useState({});
+  const [data, setData] = useState({
+    userId: user.id,
+  });
   const [specializations , setSpecializations ] = useState([]);
 
   /**
     * Get Notifications
     */
   const getStylistSpecializations  = () => {
-    api.get(`${endpoints.stylistSpecialization}?user_id=${user.account.id}`)
-        .then(res => setNotifications(res.data.data));
+    api.get(`${endpoints.stylistSpecialization}?stylist_id=${stylist.profile?.id}`)
+      .then(res => {
+        res.data.data.map((specialization) => {
+          specialization.name_en = specialization.title;
+          specialization.name = specialization.title;
+        });
+        setSpecializations(res.data.data);
+      });
   };
 
 
   const submitQuotation = () => {
-    if (!data.sessionType || !data.fees) return;
-    props.navigation.navigate('quotationPlaceOrder', { data });
+    if (!data.sessionTypeId || !data.fees || !data.date) return;
+    navigation.navigate('quotationPlaceOrder', { data });
+  };
+
+  const setSession = (sessionId) => {
+    setData({
+      ...data,
+      sessionTypeId: sessionId,
+      sessionTitle: specializations.find((item) => item.id = sessionId).title,
+    });
   };
 
   useEffect(() => {
-    // getStylistSpecializations();
+    getStylistSpecializations();
   }, []);
     
   return  <SafeAreaView style={[GeneralStyle.container]}>
       <SafeAreaView style={[GeneralStyle.rowSpaceBetween, { marginBottom: 15 }]}>
         <RectButton 
           style={{ marginHorizontal: 10, padding: 8, borderRadius: 4}}
-          onPress={()=> props.navigation.goBack()}
+          onPress={()=> navigation.goBack()}
         >
           <FastImage 
             source={require('../../../assets/icons/back-arrow.png')} 
@@ -79,15 +96,14 @@ const CreateQuotation = props  => {
       </SafeAreaView>
       <ScrollView style={style.container}>
         <Text style={[ style.stylistName ]}>
-          Name:  {stylist.profile?.user?.name}
+          Name:  {user?.name}
         </Text>
         <View style={style.graySectionContainer}>
-          <Input
+          <Dropdown
             name={'Session type'}
-            onChangeText={(value) => setData({...data, sessionType: value})}
+            items={specializations}
+            onChangeValue={setSession}
             placeholderText={'Session type'}
-            color={'#393B3C'}
-            placeholderColor={'#C3C3C3'} 
           />
         </View>
         <View style={style.graySectionContainer}>
@@ -98,8 +114,9 @@ const CreateQuotation = props  => {
             style={{ width: '90%', marginTop: 15, marginStart: 15 }}
             mode="date"
             date={data.date}
-            format="DD/MM/YYYY"
+            format="YYYY-MM-DD"
             minDate="01-01-2022"
+            theme="light"
             confirmBtnText={I18n.t('confirm')}
             cancelBtnText={I18n.t('cancel')}
             customStyles={{
@@ -117,9 +134,6 @@ const CreateQuotation = props  => {
                 height: 50,
                 backgroundColor: '#FFF',
                 borderColor: '#E0E0E0'
-              },
-              dateTouchBody: {
-                backgroundColor: 'red',
               },
               datePickerCon: {
                 backgroundColor: Platform.OS === 'ios' ? '#043B6C' : '#FFF',
@@ -152,7 +166,7 @@ const CreateQuotation = props  => {
           <Input
             name={'Fees'}
             onChangeText={(value) => setData({...data, fees: value})}
-            placeholderText={'Price in EGP'}
+            placeholderText={'Fees in EGP'}
             isNumeric
             color={'#393B3C'}
             placeholderColor={'#C3C3C3'}
@@ -162,7 +176,7 @@ const CreateQuotation = props  => {
       </ScrollView>
       <View style={style.buttonsContainer}>
         <TallaButton
-          onPress={() => props.navigation.goBack()}
+          onPress={() => navigation.goBack()}
           label={'Cancel'}
           style={{ flex: 1, marginEnd: 10, borderWidth: 1, borderColor: '#D4AF37'}}
           bgColor={'#FFF'}

@@ -19,7 +19,7 @@ import Button from '../../components/Button';
 import api from '../../config/api';
 import endpoints from '../../config/endpoints';
 
-const Gift = ({...props}) => {
+const Gift = ({ ...props }) => {
    const [selected , setSelected] = useState(0);      
    const [gifts, setGifts] = useState([]);
 
@@ -27,62 +27,71 @@ const Gift = ({...props}) => {
    * Get gifts
    */
    const getGifts = () => {
-      api  
-         .get(endpoints.gifts)
+      api.get(endpoints.gifts)
          .then(res => setGifts(res.data.data));
-   }
+   };
 
    //Render brands 
    const renderItem = (item) => {
-      return  <Selector isRadio={false}
-                        hideText={true}
-                        item={item}
-                        isCurrentSelected={selected == item.item.id}
-                        onSelect={(value)=>{setSelected(value)}}/>
-   }
+      return <Selector 
+        isRadio={false}
+        hideText={true}
+        item={item}
+        isCurrentSelected={selected == item.item.id}
+        onSelect={(value)=>{setSelected(value)}}
+      />
+   };
 
    useEffect(() => {
-      //Get gifts list
       getGifts();
-   },[])
+   },[]);
 
    return <SafeAreaView style={style.container}>
          <StatusBar hidden={false}  barStyle={'dark-content'}  backgroundColor={'#FFF'}/>
           <View style={[GeneralStyle.rowSpaceBetween,{padding:20}]}>
             <BorderlessButton onPress={()=>{props.navigation.goBack()}}>
-               <FastImage  source={require('../../assets/icons/close-primary.png')}
-                        style={{width:20,height:20}}
-                        resizeMode={'contain'}/>
+               <FastImage  
+                source={require('../../assets/icons/close-primary.png')}
+                style={{width:20,height:20}}
+                resizeMode={'contain'}
+            />
             </BorderlessButton>
             <Text style={[GeneralStyle.blackBoldText,{fontSize:18 , color : '#000'}]}>
                {I18n.t('yourGift')}
             </Text>
-            <View></View>
+            <View />
          </View>
-         <Animatable.View animation={'bounceIn'} 
-                          duration={900}
-                          style={style.giftContainer}>
-            <FastImage  source={require('../../assets/images/gift.png')}
-                        style={style.giftImage}
-                        resizeMode={'contain'}/>
-            <Text style={style.text}>
-               {I18n.t('yourGiftText')}
-            </Text>
+         <Animatable.View 
+            animation={'bounceIn'} 
+            duration={900}
+            style={style.giftContainer}
+            useNativeDriver={true}
+        >
+          <FastImage  
+            source={require('../../assets/images/gift.png')}
+            style={style.giftImage}
+            resizeMode={'contain'}
+          />
+          <Text style={style.text}>
+             {I18n.t('yourGiftText')}
+          </Text>
          </Animatable.View>
          <View style={{flex:1}}>
-         <FlatList   contentContainerStyle={{alignSelf:'center',marginVertical: 5}}
-                     horizontal={false}
-                     showsVerticalScrollIndicator={false}
-                     data={gifts}
-                     numColumns={2}
-                     key={( 'h' )}
-                     renderItem = {(item)=> renderItem(item)}
-                     keyExtractor={(item, index) => index}
-                    />
+          <FlatList   
+            contentContainerStyle={{alignSelf:'center',marginVertical: 5}}
+            horizontal={false}
+            showsVerticalScrollIndicator={false}
+            data={gifts}
+            numColumns={2}
+            key={( 'h' )}
+            renderItem = {(item)=> renderItem(item)}
+            keyExtractor={(item, index) => index}
+          />
          </View>
-         <Button label={'done'}
-                 labelColor ={'#FFF'}
-                 style={{width:'90%'}}
+         <Button 
+          label={'done'}
+          labelColor ={'#FFF'}
+          style={{width:'90%'}}
          />
     </SafeAreaView>
 };

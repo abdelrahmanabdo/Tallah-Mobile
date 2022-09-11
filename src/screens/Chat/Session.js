@@ -10,9 +10,9 @@ import style from '../../assets/styles/MessagesStyle';
 import GeneralStyle from '../../assets/styles/GeneralStyle';
 
 
-const Call = (props) => {
+const Session = (props) => {
 
 
-}
+};
 
-export default Call;
+export default Session;

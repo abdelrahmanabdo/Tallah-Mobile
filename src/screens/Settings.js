@@ -174,7 +174,7 @@ const Settings = props  => {
             Reservations
         </Text>
       </View>
-      <Animatable.View animation={'slideInRight'}  style={style.itemContainer}>
+      <Animatable.View animation={'slideInRight'}  style={style.itemContainer} useNativeDriver={true}>
         <Text style={style.title}>
           Show my working hours
         </Text>
@@ -189,7 +189,7 @@ const Settings = props  => {
           }}
         />
       </Animatable.View>
-      <Animatable.View animation={'slideInRight'}  style={style.itemContainer}>
+      <Animatable.View animation={'slideInRight'}  style={style.itemContainer} useNativeDriver={true}>
         <Text style={style.title}>
             Show me in stylist list
         </Text>

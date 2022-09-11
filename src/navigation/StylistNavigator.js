@@ -12,8 +12,7 @@ import PhoneConfirmation from '../screens/Stylist/Request/PhoneConfirmation';
 import StylistRequestSteps from '../screens/Stylist/Request/StylistRequestSteps';
 import ProjectDetails from '../screens/Stylist/Projects/ProjectDetails';
 import Projects from '../screens/Stylist/Projects/Projects';
-import Chat from '../screens/Chat/Chat';
-import Call from '../screens/Chat/Call/Details';
+import Chat from '../screens/Chat';
 import Answer from '../screens/Chat/Call/Answer';
 import CreateQuotation from '../screens/Quotation/create';
 import QuotationPlaceOrder from '../screens/Quotation/create/place-order';
@@ -23,6 +22,7 @@ import StylistTab from '../screens/Tabs/StylistTab';
 import Profile from '../screens/Profile/Profile';
 import CreateProfile from '../screens/Profile/CreateProfile';
 import BodyShapeCalculator from '../screens/Profile/BodyShapeCalculator';
+import Session from '../screens/Chat/Session';
 
 const config = {
    animation :'spring',
@@ -90,8 +90,8 @@ export function StylistNavigator () {
          <Stack.Screen name="AnswerCall" 
                        component={Answer}
                        />    
-         <Stack.Screen name="CallDetails" 
-                       component={Call}
+         <Stack.Screen name="Session" 
+                       component={Session}
                        /> 
          <Stack.Screen name="createProfile" 
                        component={CreateProfile}

@@ -287,9 +287,10 @@ const ClosetItemView = ({...props}) => {
                      animationIn={'bounceIn'}
                      backdropOpacity={.7}>
          <View style={ModalStyle.container}>
-            <FastImage source={require('../../assets/icons/delete-red.png')}
-                        resizeMode="contain"
-                        style={{width :  60  , height:  60 }}
+            <FastImage 
+              source={require('../../assets/icons/delete-red.png')}
+              resizeMode="contain"
+              style={{width :  60  , height:  60 }}
             />
             <Text style={[ModalStyle.text,{fontFamily : 'Roboto-Bold'}]}>
                Are you sure that you want to delete this item?
@@ -412,17 +413,19 @@ const ClosetItemView = ({...props}) => {
           isLoading 
           ? <Spinner />
           : <>
-            <ImageBackground source={data?.image ? {uri: data.image} : require('../../assets/images/closet-item-default.png')}
-                              resizeMode={'stretch'}
-                              style={style.bgImage}>
-                <View style={style.uploadImageButton}>
-                  <AddToFavourites 
-                      isGold 
-                      iconSize="big" 
-                      itemId={data?.id}
-                      type={'item'}
-                  />
-                </View>
+            <ImageBackground 
+              source={data?.image ? {uri: data.image} : require('../../assets/images/closet-item-default.png')}
+              resizeMode={'contain'}
+              style={style.bgImage}
+            >
+              <View style={style.uploadImageButton}>
+                <AddToFavourites 
+                    isGold 
+                    iconSize="big" 
+                    itemId={data?.id}
+                    type={'item'}
+                />
+              </View>
             </ImageBackground>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={style.grayContainer}>

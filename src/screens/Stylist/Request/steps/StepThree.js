@@ -190,8 +190,9 @@ const StepThree = props => {
     {
       certificates.map((item ,key ) => {
         return <Animatable.View
-                    style={style.grayBoxContainer}
-                    ref={certificateRef}
+                style={style.grayBoxContainer}
+                ref={certificateRef}
+                useNativeDriver={true}
               >
           <View style={[GeneralStyle.rowSpaceBetween , {marginVertical: 5 , alignItems:'center'}]}>
             <Text

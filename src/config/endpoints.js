@@ -46,6 +46,8 @@ export default {
   //Favourites
   'favourites': 'favourites',
 
+  'quotations': 'quotations',
+
   //Notifications
   'notifications': 'notifications',
 

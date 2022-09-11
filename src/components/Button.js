@@ -14,15 +14,6 @@ import { ActivityIndicator } from 'react-native-paper';
 const { height, width } = Dimensions.get('window');
 
 export default ({ children, ...props }) => {
-  // const loadingButton = useRef();
-  const [ loadingButton, setLoadingButton ] = useState({});
-
-  const _onPressHandler = () => {
-    loadingButton.showLoading(true);
-    props.onPress();
-    loadingButton.showLoading(false);
-  };
-
   const style = StyleSheet.create({
     container : {
       flexDirection: 'column',
@@ -64,22 +55,20 @@ export default ({ children, ...props }) => {
         rippleColor={'#CCC'}
         onPress ={props.onPress}
         enabled={props.isLoading || !props.isDisabled}
-        style = {
-          [
-            style.container,
-            props.style,
-            props.isLoading ? { 
-              width: 55,
-              borderRadius: 27
-            } : null
-          ]
-        }
+        style = {[
+          style.container,
+          props.style,
+          props.isLoading ? { 
+            width: 55,
+            borderRadius: 27
+          } : null
+        ]}
       >
         {
           props.isLoading
-          ? < ActivityIndicator
+          ? <ActivityIndicator
             animating={props.isLoading}
-            size="small" 
+            size="small"
             color="#FFF"
           />
           : <Text style={style.label}>

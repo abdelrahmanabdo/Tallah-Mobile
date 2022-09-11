@@ -10,27 +10,26 @@ const Add = props => {
    return <Animatable.View
             animation="bounceIn"
             style={style.addContainer}
+            useNativeDriver={true}
          >
-        <Text 
-         style={[GeneralStyle.blackText , {fontSize : 16 , marginBottom: 10}]}
-        >
-           Add new {props.type}
-         </Text>
-        <BorderlessButton  
-               style={[GeneralStyle.row , 
-                           {backgroundColor : '#FFF' , padding : 13 , 
-                            borderRadius : 10 , marginVertical : 10 }]}
-               onPress={props.onPress}
-         >
-            <FastImage 
-               source={require('../../../../assets/icons/add-dashed.png')}
-               style={{width : 35 , height : 35}}
-            />
-            <Text style={[GeneralStyle.goldText , {marginStart : 10}]}>
-               Add {props.type}
-            </Text>
-        </BorderlessButton>
-    </Animatable.View>
+      <Text style={[GeneralStyle.blackText , {fontSize : 16 , marginBottom: 10}]}>
+        Add new {props.type}
+      </Text>
+      <BorderlessButton  
+        style={[GeneralStyle.row , 
+                {backgroundColor : '#FFF' , padding : 13 , 
+                borderRadius : 10 , marginVertical : 10 }]}
+        onPress={props.onPress}
+      >
+        <FastImage 
+          source={require('../../../../assets/icons/add-dashed.png')}
+          style={{width : 35 , height : 35}}
+        />
+        <Text style={[GeneralStyle.goldText , {marginStart : 10}]}>
+            Add {props.type}
+        </Text>
+      </BorderlessButton>
+  </Animatable.View>
 };
 
 export default Add;

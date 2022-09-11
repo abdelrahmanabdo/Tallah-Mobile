@@ -11,7 +11,7 @@ import Button from '../../components/Button';
 
 const Intro = props  => {
     const text = `
-1 - Contact us on smile@tallah.co for any inquiries or questions before publishing your content.
+1 - Contact us on lve2hearu@tallah.co for any inquiries or questions before publishing your content.
 
 2 -  Give your content a snappy and catchy title.
 

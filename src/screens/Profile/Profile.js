@@ -74,7 +74,7 @@ const Profile = ({...props}) => {
             <View style={{flex:1}}>
               <ImageBackground 
                 source={data.avatar ? {uri: data.avatar} : require('../../assets/images/profile-default.png')}
-                resizeMode={'stretch'}
+                resizeMode={'contain'}
                 style={style.bgImage}
               >
                 {
@@ -126,13 +126,10 @@ const Profile = ({...props}) => {
                     <Text style={[style.sectionTitle]}>
                       {I18n.t('personalInfo')}
                     </Text>
-                    < RectButton onPress = {
-                      () => props.navigation.navigate('createProfile', {
-                        activeStep: 2
-                      })
-                    } >
-                      <FastImage source={require('../../assets/icons/edit.png')}
-                                  style={{width:20,height:20}}
+                    <RectButton onPress = {() => props.navigation.navigate('createProfile', { activeStep: 2 })}>
+                      <FastImage 
+                        source={require('../../assets/icons/edit.png')}
+                        style={{width:20,height:20}}
                       />
                     </RectButton>
                 </View>

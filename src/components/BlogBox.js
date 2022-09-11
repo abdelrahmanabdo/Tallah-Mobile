@@ -8,9 +8,8 @@ import Share from "react-native-share";
 // Styles 
 import style from '../assets/styles/BlogBoxStyle';
 
-const BlogBox = props => {
+const BlogBox = (props) => {
    const [blog , setBlog ] = useState(props.data);
-
 
   /**
     * Share Item
@@ -59,19 +58,13 @@ const BlogBox = props => {
         <View style={[style.actionsSection]}>
           <FastImage  
             source={
-              blog.user?.profile?.avatar 
+              blog?.user?.profile?.avatar 
                 ? {uri: blog.user.profile.avatar}
                 : require('../assets/logo.png')
             }
             style={{height : 40 , width : 40 ,borderRadius : 20}}
             resizeMode="cover" 
           />
-          <View style={{alignItems:'center'}}>
-              {/* <AddToFavourites item={blog} /> 
-              <Text style={[style.likesNumber]}>
-              {blog.likes}
-              </Text> */}
-          </View>
           <BorderlessButton onPress={share} >
               <FastImage  
                 source={require('../assets/icons/share-colored.png')}
@@ -86,7 +79,7 @@ const BlogBox = props => {
           onPress={props.onPress}
         >
           <FastImage  
-            source={blog.image 
+            source={blog?.image 
                ? {uri: blog.image.image} 
                : require('../assets/images/blog-default.png')}
             style={[style.blogImage]}
@@ -94,7 +87,7 @@ const BlogBox = props => {
           />
           <Text style={[style.blogText]} numberOfLines={3}>
             {
-              blog.body
+              blog?.body
                 .replace(/(&nbsp;|&quot;|(<([^>]+)>))/ig, "")
                 .replace(/&rsquo;/ig, "'")
             }

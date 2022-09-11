@@ -2,7 +2,8 @@ import React, {
   useState,
   useEffect
 } from 'react';
-import { Text, View, ImageBackground , FlatList , ScrollView, SafeAreaView, Platform } from 'react-native';
+import { Text, View, ImageBackground , FlatList , ScrollView, SafeAreaView } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FastImage from 'react-native-fast-image';
 import { BorderlessButton , BaseButton } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
@@ -221,7 +222,7 @@ const NewBlog = props  => {
                 </View>
             </View>
         </View>
-        <ScrollView style={[style.container]}>
+        <KeyboardAwareScrollView style={[style.container]}>
             <View style={[style.userInfoContainer]}>
               <FastImage 
                 source={user.account?.profile?.avatar
@@ -296,7 +297,7 @@ const NewBlog = props  => {
                     color={'#000000'}  
               />
             </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
         <View style={[style.actionsContainer]}>
             <View style={{flexDirection : 'row'}}>
               <BorderlessButton onPress={launchCamera}>
